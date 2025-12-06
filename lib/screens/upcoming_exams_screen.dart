@@ -33,7 +33,7 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
     // Mock exam data
     final exams = [
       Exam(
-        id: '1',
+        id: 1,
         name: 'JEE Main 2024',
         description: 'Joint Entrance Examination for engineering colleges',
         date: '2024-04-15',
@@ -43,7 +43,7 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
         examType: 'Online',
       ),
       Exam(
-        id: '2',
+        id: 2,
         name: 'NEET 2024',
         description:
             'National Eligibility cum Entrance Test for medical colleges',
@@ -54,7 +54,7 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
         examType: 'Offline',
       ),
       Exam(
-        id: '3',
+        id: 3,
         name: 'CAT 2024',
         description: 'Common Admission Test for MBA programs',
         date: '2024-11-24',
@@ -64,7 +64,7 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
         examType: 'Online',
       ),
       Exam(
-        id: '4',
+        id: 4,
         name: 'GATE 2025',
         description: 'Graduate Aptitude Test in Engineering',
         date: '2025-02-01',
@@ -74,7 +74,7 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
         examType: 'Online',
       ),
       Exam(
-        id: '5',
+        id: 5,
         name: 'UPSC Prelims 2024',
         description:
             'Union Public Service Commission Civil Services Preliminary Exam',
@@ -85,7 +85,7 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
         examType: 'Offline',
       ),
       Exam(
-        id: '6',
+        id: 6,
         name: 'SSC CGL 2024',
         description: 'Staff Selection Commission Combined Graduate Level Exam',
         date: '2024-07-10',
@@ -95,7 +95,7 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
         examType: 'Online',
       ),
       Exam(
-        id: '7',
+        id: 7,
         name: 'CBSE Class 10 Board Exam 2024',
         description:
             'Central Board of Secondary Education Class 10 examination',
@@ -106,7 +106,7 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
         examType: 'Offline',
       ),
       Exam(
-        id: '8',
+        id: 8,
         name: 'ICSE Class 12 Board Exam 2024',
         description:
             'Indian Certificate of Secondary Education Class 12 examination',
@@ -122,8 +122,8 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
       _allExams = exams;
       _filteredExams = userEducationLevel != null
           ? exams
-              .where((exam) => exam.educationLevel == userEducationLevel)
-              .toList()
+                .where((exam) => exam.educationLevel == userEducationLevel)
+                .toList()
           : exams;
       _isLoading = false;
     });
@@ -134,8 +134,8 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
       _userEducationLevel = educationLevel;
       _filteredExams = educationLevel != null
           ? _allExams
-              .where((exam) => exam.educationLevel == educationLevel)
-              .toList()
+                .where((exam) => exam.educationLevel == educationLevel)
+                .toList()
           : _allExams;
     });
   }
@@ -143,10 +143,7 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Upcoming Exams'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Upcoming Exams'), centerTitle: true),
       body: Column(
         children: [
           // Education Level Filter
@@ -157,10 +154,7 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
               children: [
                 const Text(
                   'Filter by Education Level',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -221,48 +215,46 @@ class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {
           // Exams List
           Expanded(
             child: _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
+                ? const Center(child: CircularProgressIndicator())
                 : _filteredExams.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.event_busy,
-                              size: 64,
-                              color: Colors.grey[400],
-                            ),
-                            const SizedBox(height: 16),
-                            const Text(
-                              'No upcoming exams found',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              _userEducationLevel != null
-                                  ? 'No exams available for $_userEducationLevel level'
-                                  : 'No exams available',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.event_busy,
+                          size: 64,
+                          color: Colors.grey[400],
                         ),
-                      )
-                    : ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _filteredExams.length,
-                        itemBuilder: (context, index) {
-                          final exam = _filteredExams[index];
-                          return _ExamCard(exam: exam);
-                        },
-                      ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'No upcoming exams found',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _userEducationLevel != null
+                              ? 'No exams available for $_userEducationLevel level'
+                              : 'No exams available',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _filteredExams.length,
+                    itemBuilder: (context, index) {
+                      final exam = _filteredExams[index];
+                      return _ExamCard(exam: exam);
+                    },
+                  ),
           ),
         ],
       ),
@@ -298,11 +290,14 @@ class _ExamCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
-                    color: _getEducationLevelColor(exam.educationLevel)
-                        .withValues(alpha: 0.1),
+                    color: _getEducationLevelColor(
+                      exam.educationLevel,
+                    ).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
@@ -319,40 +314,23 @@ class _ExamCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               exam.description,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 12),
             Row(
               children: [
-                Icon(
-                  Icons.calendar_today,
-                  size: 16,
-                  color: Colors.grey[600],
-                ),
+                Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
                 const SizedBox(width: 4),
                 Text(
                   exam.date,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
                 const SizedBox(width: 16),
-                Icon(
-                  Icons.access_time,
-                  size: 16,
-                  color: Colors.grey[600],
-                ),
+                Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
                 const SizedBox(width: 4),
                 Text(
                   exam.duration,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -360,11 +338,14 @@ class _ExamCard extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
-                    color:
-                        _getExamTypeColor(exam.examType).withValues(alpha: 0.1),
+                    color: _getExamTypeColor(
+                      exam.examType,
+                    ).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
@@ -378,8 +359,10 @@ class _ExamCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),

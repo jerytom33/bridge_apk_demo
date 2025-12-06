@@ -16,13 +16,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // Add state variables for history data
-  List<Map<String, dynamic>> _resumeHistory = [];
-  List<Map<String, dynamic>> _aptitudeHistory = [];
-  List<Map<String, dynamic>> _savedExams = [];
-  List<Map<String, dynamic>> _savedCourses = [];
-  bool _isLoading = false;
-  String? _error;
+  // Add state variables for history data (displayed via ProfileProvider)
 
   @override
   void initState() {

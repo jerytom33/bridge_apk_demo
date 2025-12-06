@@ -24,7 +24,21 @@ class Post {
     required this.isSaved,
   });
 
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
+      id: int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      title: json['title']?.toString() ?? '',
+      content: json['content']?.toString() ?? '',
+      author: (json['author'] is Map)
+          ? (json['author']['username'] ?? json['author']['name'] ?? 'Unknown')
+                .toString()
+          : json['author']?.toString() ?? '',
+      createdAt: json['created_at'] ?? '',
+      likeCount: int.tryParse(json['like_count']?.toString() ?? '') ?? 0,
+      isLiked: json['is_liked'] ?? false,
+      isSaved: json['is_saved'] ?? false,
+    );
+  }
 
   Map<String, dynamic> toJson() => _$PostToJson(this);
 

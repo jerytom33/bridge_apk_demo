@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import 'login_screen.dart';
+import '../services/api_service.dart';
 import 'onboarding_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -71,10 +71,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     } catch (e) {
       if (mounted) {
+        // specific check
+        final isConnected = await ApiService.verifyConnection();
+        String errorMessage = 'Network Error: $e';
+        if (!isConnected) {
+          errorMessage =
+              'Cannot connect to server. Please verify:\n1. Backend is running on port 8000\n2. IP 10.0.2.2 is accessible (Emulator)\n3. Check your firewall';
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Network Error: $e'),
+            content: Text(errorMessage),
             backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
           ),
         );
       }
@@ -142,8 +151,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       validator: (value) => value!.isEmpty
                           ? 'Enter your name'
                           : value.length < 3
-                              ? 'Name too short'
-                              : null,
+                          ? 'Name too short'
+                          : null,
                     ),
                     const SizedBox(height: 20),
                     // Email Field
@@ -154,8 +163,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value!.isEmpty) return 'Enter email';
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                            .hasMatch(value)) {
+                        if (!RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        ).hasMatch(value)) {
                           return 'Invalid email';
                         }
                         return null;
@@ -176,13 +186,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           color: Colors.grey[600],
                         ),
                         onPressed: () => setState(
-                            () => _obscurePassword = !_obscurePassword),
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                       ),
                       validator: (value) => value!.isEmpty
                           ? 'Enter password'
                           : value.length < 6
-                              ? 'Min 6 characters'
-                              : null,
+                          ? 'Min 6 characters'
+                          : null,
                     ),
                     const SizedBox(height: 20),
                     // Confirm Password Field
@@ -198,8 +209,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               : Icons.visibility_off,
                           color: Colors.grey[600],
                         ),
-                        onPressed: () => setState(() =>
-                            _obscureConfirmPassword = !_obscureConfirmPassword),
+                        onPressed: () => setState(
+                          () => _obscureConfirmPassword =
+                              !_obscureConfirmPassword,
+                        ),
                       ),
                       validator: (value) => value != _passwordController.text
                           ? 'Passwords do not match'
@@ -242,9 +255,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   Text(
                     "Already have an account? ",
-                    style: GoogleFonts.poppins(
-                      color: Colors.grey[600],
-                    ),
+                    style: GoogleFonts.poppins(color: Colors.grey[600]),
                   ),
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
@@ -299,10 +310,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: const Color(0xFF6C63FF),
-            width: 1.5,
-          ),
+          borderSide: BorderSide(color: const Color(0xFF6C63FF), width: 1.5),
         ),
       ),
     );

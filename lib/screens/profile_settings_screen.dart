@@ -117,7 +117,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     // Mock saved exams data
     final savedExams = [
       Exam(
-        id: '1',
+        id: 1,
         name: 'JEE Main 2024',
         description: 'Joint Entrance Examination for engineering colleges',
         date: '2024-04-15',
@@ -127,7 +127,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         examType: 'Online',
       ),
       Exam(
-        id: '2',
+        id: 2,
         name: 'NEET 2024',
         description:
             'National Eligibility cum Entrance Test for medical colleges',
@@ -199,7 +199,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         'phone': _phoneController.text.trim(),
       };
 
-      final result = await ApiService.setupProfile(profileData);
+      final result = await ApiService.updateStudentProfile(profileData);
 
       if (result['success']) {
         setState(() {

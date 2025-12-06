@@ -22,7 +22,6 @@ class _SignupScreenState extends State<SignupScreen> {
   // SAME DARK THEME AS LOGIN PAGE
   final Color _primaryColor = const Color(0xFF0D0D0D);
   final Color _secondaryColor = const Color(0xFF2C2C2C);
-  final Color _accentColor = const Color(0xFFFFFFFF);
   final Color _buttonColor = const Color(0xFF0D0D0D);
   final Color _buttonTextColor = Colors.white;
 
@@ -77,7 +76,7 @@ class _SignupScreenState extends State<SignupScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('No internet or server down. Check connection.'),
+          content: Text('Error: ${e.toString()}'),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 4),
         ),

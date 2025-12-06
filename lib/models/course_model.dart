@@ -31,13 +31,13 @@ class Course {
 
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
-      id: json['id'] ?? 0,
+      id: int.tryParse(json['id']?.toString() ?? '') ?? 0,
       title: json['title'] ?? '',
       provider: json['provider'] ?? '',
       careerPath: json['career_path'] ?? '',
       duration: json['duration'] ?? '',
-      price: json['price'] ?? '',
-      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      price: json['price']?.toString() ?? '',
+      rating: double.tryParse(json['rating']?.toString() ?? '') ?? 0.0,
       link: json['link'] ?? '',
       description: json['description'] ?? '',
       isCertified: json['is_certified'] ?? false,

@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../services/api_service.dart';
 import 'register_screen.dart';
 import 'main_wrapper.dart';
 
@@ -54,20 +55,36 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(builder: (context) => const MainWrapper()),
         );
       } else if (mounted) {
+        String errorMsg = result['error'] ?? 'Login failed';
+        if (errorMsg.contains('timeout') ||
+            errorMsg.contains('Network error')) {
+          final isConnected = await ApiService.verifyConnection();
+          if (!isConnected) {
+            errorMsg =
+                'Cannot reach server at ${ApiService.baseUrl}.\n'
+                '1. Device and PC must be on same WiFi.\n'
+                '2. Backend must run on 0.0.0.0:8000.';
+          }
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result['error'] ?? 'Login failed'),
+            content: Text(errorMsg),
             backgroundColor: Colors.red,
+            duration: const Duration(seconds: 6),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
+        // specific check
+        final isConnected = await ApiService.verifyConnection();
+        String errorMessage = 'Network Error: $e';
+        if (!isConnected) {
+          errorMessage = 'Cannot connect to server. Check IP in ApiService.';
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Network Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -136,8 +153,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
                         }
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                            .hasMatch(value)) {
+                        if (!RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        ).hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
                         return null;
@@ -210,14 +228,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text('Forgot Password feature coming soon!')),
+                      content: Text('Forgot Password feature coming soon!'),
+                    ),
                   );
                 },
                 child: Text(
                   'Forgot Password?',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF6C63FF),
-                  ),
+                  style: GoogleFonts.poppins(color: const Color(0xFF6C63FF)),
                 ),
               ),
               const SizedBox(height: 50),
@@ -227,16 +244,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Text(
                     "Don't have an account? ",
-                    style: GoogleFonts.poppins(
-                      color: Colors.grey[600],
-                    ),
+                    style: GoogleFonts.poppins(color: Colors.grey[600]),
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const RegisterScreen()),
+                          builder: (context) => const RegisterScreen(),
+                        ),
                       );
                     },
                     child: Text(
@@ -290,10 +306,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide(
-            color: const Color(0xFF6C63FF),
-            width: 1.5,
-          ),
+          borderSide: BorderSide(color: const Color(0xFF6C63FF), width: 1.5),
         ),
       ),
     );

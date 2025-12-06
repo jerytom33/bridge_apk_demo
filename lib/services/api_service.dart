@@ -1,23 +1,32 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
-import '../models/career_model.dart';
-import '../models/course_model.dart';
 
 class ApiService {
-  // Updated for general use - works for both emulator and physical devices
-  static const String baseUrl = 'http://localhost:8000/api';
+  // Android uses 10.0.2.2 to refer to the host machine's localhost
+  // For physical devices on the same network, use your PC's IP address instead
+  static const String baseUrl = 'http://192.168.29.174:8000/api';
+
+  static Future<bool> verifyConnection() async {
+    try {
+      final response = await http
+          .get(Uri.parse('$baseUrl/'))
+          .timeout(const Duration(seconds: 10));
+      return response.statusCode == 200 ||
+          response.statusCode ==
+              404; // 404 means server reached but path not found, which is fine for connectivity check
+    } catch (e) {
+      if (kDebugMode) print('Connection Check Failed: $e');
+      return false;
+    }
+  }
 
   static Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('access_token');
-  }
-
-  static Future<int?> _getUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('user_id');
   }
 
   static Future<void> _saveAuthData(
@@ -46,20 +55,22 @@ class ApiService {
     String confirmPassword,
   ) async {
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/auth/register/'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'name': name,
-          'email': email,
-          'password': password,
-          'confirm_password': confirmPassword,
-        }),
-      );
+      final response = await http
+          .post(
+            Uri.parse('$baseUrl/auth/register/'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'name': name,
+              'email': email,
+              'password': password,
+              'confirm_password': confirmPassword,
+            }),
+          )
+          .timeout(const Duration(seconds: 60));
 
       if (kDebugMode) {
         print('REGISTER → ${response.statusCode}');
-        print(response.body);
+        print('Response body: ${response.body}');
       }
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -74,15 +85,99 @@ class ApiService {
           };
         }
       } else {
-        final error = jsonDecode(response.body);
-        return {
-          'success': false,
-          'error': error['error'] ?? 'Registration failed',
-        };
+        try {
+          final error = jsonDecode(response.body);
+          return {
+            'success': false,
+            'error':
+                error['error'] ??
+                error['message'] ??
+                'Registration failed (Status: ${response.statusCode})',
+          };
+        } catch (e) {
+          return {
+            'success': false,
+            'error': 'Registration failed (Status: ${response.statusCode})',
+          };
+        }
       }
+    } on TimeoutException {
+      if (kDebugMode) print('Register Timeout Error');
+      return {
+        'success': false,
+        'error': 'Request timeout. Check your connection.',
+      };
     } catch (e) {
       if (kDebugMode) print('Register Error: $e');
-      return {'success': false, 'error': 'No internet or server down'};
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Student Registration endpoint
+  static Future<Map<String, dynamic>> registerStudent(
+    String name,
+    String email,
+    String password,
+    String confirmPassword,
+  ) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse('$baseUrl/student/register/'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'name': name,
+              'email': email,
+              'password': password,
+              'confirm_password': confirmPassword,
+            }),
+          )
+          .timeout(const Duration(seconds: 60));
+
+      if (kDebugMode) {
+        print('STUDENT REGISTER → ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+
+      if (response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        // Assuming the response structure is similar to the general register
+        // or based on the provided docs: {success, message, access, refresh, user_id}
+        if (data['success'] == true) {
+          await _saveAuthData(data['access'], data['refresh'], data['user_id']);
+          return {'success': true, 'data': data};
+        } else {
+          // Fallback if success is not explicitly true but 201 returned
+          // (The docs say it returns success: true, but just in case)
+          await _saveAuthData(data['access'], data['refresh'], data['user_id']);
+          return {'success': true, 'data': data};
+        }
+      } else {
+        try {
+          final error = jsonDecode(response.body);
+          return {
+            'success': false,
+            'error':
+                error['error'] ??
+                error['message'] ??
+                'Registration failed (Status: ${response.statusCode})',
+          };
+        } catch (e) {
+          return {
+            'success': false,
+            'error': 'Registration failed (Status: ${response.statusCode})',
+          };
+        }
+      }
+    } on TimeoutException {
+      if (kDebugMode) print('Student Register Timeout Error');
+      return {
+        'success': false,
+        'error': 'Request timeout. Check your connection.',
+      };
+    } catch (e) {
+      if (kDebugMode) print('Student Register Error: $e');
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
     }
   }
 
@@ -92,15 +187,17 @@ class ApiService {
     String password,
   ) async {
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/auth/login/'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email, 'password': password}),
-      );
+      final response = await http
+          .post(
+            Uri.parse('$baseUrl/auth/login/'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'email': email, 'password': password}),
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (kDebugMode) {
         print('LOGIN → ${response.statusCode}');
-        print(response.body);
+        print('Response body: ${response.body}');
       }
 
       if (response.statusCode == 200) {
@@ -115,15 +212,31 @@ class ApiService {
           };
         }
       } else {
-        final error = jsonDecode(response.body);
-        return {
-          'success': false,
-          'error': error['error'] ?? 'Invalid credentials',
-        };
+        try {
+          final error = jsonDecode(response.body);
+          return {
+            'success': false,
+            'error':
+                error['error'] ??
+                error['message'] ??
+                'Invalid credentials (Status: ${response.statusCode})',
+          };
+        } catch (e) {
+          return {
+            'success': false,
+            'error': 'Invalid credentials (Status: ${response.statusCode})',
+          };
+        }
       }
+    } on TimeoutException {
+      if (kDebugMode) print('Login Timeout Error');
+      return {
+        'success': false,
+        'error': 'Request timeout. Check your connection.',
+      };
     } catch (e) {
       if (kDebugMode) print('Login Error: $e');
-      return {'success': false, 'error': 'No internet or server down'};
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
     }
   }
 
@@ -156,6 +269,40 @@ class ApiService {
   }
 
   // Setup profile endpoint
+
+  static Future<Map<String, dynamic>> updateStudentProfile(
+    Map<String, dynamic> profileData,
+  ) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        return {'success': false, 'error': 'Not authenticated'};
+      }
+
+      final response = await http.put(
+        Uri.parse('$baseUrl/student/profile/setup/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(profileData),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return {'success': true, 'data': data};
+      } else {
+        final error = jsonDecode(response.body);
+        return {
+          'success': false,
+          'error': error['error'] ?? 'Profile update failed',
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
+    }
+  }
+
   static Future<Map<String, dynamic>> setupProfile(
     Map<String, dynamic> profileData,
   ) async {
@@ -689,6 +836,65 @@ class ApiService {
         };
       }
     } catch (e) {
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Student Dashboard - Unified endpoint for home screen
+  static Future<Map<String, dynamic>> getStudentDashboard() async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        return {'success': false, 'error': 'Unauthorized: No token found'};
+      }
+
+      final response = await http
+          .get(
+            Uri.parse('$baseUrl/student/dashboard/'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+          )
+          .timeout(const Duration(seconds: 10));
+
+      if (kDebugMode) {
+        print('STUDENT_DASHBOARD → ${response.statusCode}');
+        print('Dashboard Response: ${response.body}');
+      }
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return {'success': true, 'data': data};
+      } else if (response.statusCode == 401) {
+        await _clearAuthData();
+        return {'success': false, 'error': 'Unauthorized: Token expired'};
+      } else {
+        try {
+          final error = jsonDecode(response.body);
+          return {
+            'success': false,
+            'error':
+                error['error'] ??
+                error['message'] ??
+                'Failed to fetch dashboard (Status: ${response.statusCode})',
+          };
+        } catch (e) {
+          return {
+            'success': false,
+            'error':
+                'Failed to fetch dashboard (Status: ${response.statusCode})',
+          };
+        }
+      }
+    } on TimeoutException {
+      if (kDebugMode) print('Student Dashboard Timeout');
+      return {
+        'success': false,
+        'error': 'Request timeout. Check your connection.',
+      };
+    } catch (e) {
+      if (kDebugMode) print('Student Dashboard Error: $e');
       return {'success': false, 'error': 'Network error: ${e.toString()}'};
     }
   }

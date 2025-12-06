@@ -5,7 +5,8 @@ import '../models/course_model.dart';
 import '../services/api_service.dart';
 
 class CoursesScreen extends StatefulWidget {
-  const CoursesScreen({super.key});
+  final bool showSaved;
+  const CoursesScreen({super.key, this.showSaved = false});
 
   @override
   State<CoursesScreen> createState() => _CoursesScreenState();
@@ -22,12 +23,33 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   Future<void> _loadCourses() async {
+    setState(() => _isLoading = true);
     try {
-      final result = await ApiService.getCourses();
+      final result = widget.showSaved
+          ? await ApiService.getSavedCourses()
+          : await ApiService.getCourses();
+
       if (result['success']) {
-        final courses = (result['data']['data'] as List)
+        final responseData = result['data'];
+        print('Courses API Response: $responseData'); // Debug log
+
+        List<dynamic> listCallback = [];
+        if (responseData is Map<String, dynamic>) {
+          if (responseData.containsKey('data')) {
+            listCallback = responseData['data'] as List;
+          } else if (responseData.containsKey('results')) {
+            listCallback = responseData['results'] as List;
+          } else if (responseData.containsKey('courses')) {
+            listCallback = responseData['courses'] as List;
+          }
+        } else if (responseData is List) {
+          listCallback = responseData;
+        }
+
+        final courses = listCallback
             .map((course) => Course.fromJson(course))
             .toList();
+
         setState(() {
           _courses = courses;
           _isLoading = false;
@@ -36,8 +58,14 @@ class _CoursesScreenState extends State<CoursesScreen> {
         setState(() {
           _isLoading = false;
         });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(result['error'] ?? 'Failed to load')),
+          );
+        }
       }
     } catch (e) {
+      print('Error parsing courses: $e'); // Debug log
       setState(() {
         _isLoading = false;
       });
@@ -45,28 +73,57 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   Future<void> _refreshCourses() async {
-    setState(() {
-      _isLoading = true;
-    });
-
     await _loadCourses();
-
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
-  void _toggleSave(int courseId) {
+  Future<void> _toggleSave(int courseId) async {
+    final courseIndex = _courses.indexWhere((c) => c.id == courseId);
+    if (courseIndex == -1) return;
+
+    final course = _courses[courseIndex];
+    // Optimistic update
     setState(() {
-      final index = _courses.indexWhere((course) => course.id == courseId);
-      if (index != -1) {
-        _courses[index] = _courses[index].copyWith(
-          isSaved: !_courses[index].isSaved,
-        );
-      }
+      final updatedCourse = course.copyWith(isSaved: !course.isSaved);
+      _courses[courseIndex] = updatedCourse;
     });
+
+    try {
+      final newState = !_courses[courseIndex]
+          .isSaved; // This logic is tricky with the setState above.
+      // Let's rely on the original state:
+      // If original 'course.isSaved' was true, we want to unsave (target state false).
+      // If original 'course.isSaved' was false, we want to save (target state true).
+
+      final apiResult = !course.isSaved
+          ? await ApiService.saveCourse(courseId)
+          : await ApiService.unsaveCourse(courseId);
+
+      if (!apiResult['success']) {
+        // Revert on failure
+        if (mounted) {
+          setState(() {
+            _courses[courseIndex] = course; // Revert to original
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(apiResult['error'] ?? 'Action failed')),
+          );
+        }
+      } else {
+        // If showing saved items and we unsaved one, remove it from list
+        if (widget.showSaved && course.isSaved) {
+          setState(() {
+            _courses.removeAt(courseIndex);
+          });
+        }
+      }
+    } catch (e) {
+      // Revert
+      if (mounted) {
+        setState(() {
+          _courses[courseIndex] = course;
+        });
+      }
+    }
   }
 
   @override
@@ -74,7 +131,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Trending Courses',
+          widget.showSaved ? 'Saved Courses' : 'Trending Courses',
           style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),

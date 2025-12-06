@@ -35,13 +35,10 @@ class _SavedItemsScreenState extends State<SavedItemsScreen>
   Future<void> _loadSavedItems() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Load saved careers
-    final savedCareerIds = prefs.getStringList('saved_careers') ?? [];
-    // TODO: Implement career fetching when API endpoint is available
+    // Load saved careers (saved IDs stored locally). TODO: Implement career fetching when API endpoint is available
     final careers = <Career>[];
 
     // Load saved courses
-    final savedCourseIds = prefs.getStringList('saved_courses') ?? [];
     final courseResult = await ApiService.getSavedCourses();
     final courses = <Course>[];
     if (courseResult['success']) {

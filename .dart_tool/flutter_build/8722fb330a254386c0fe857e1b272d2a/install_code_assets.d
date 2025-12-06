@@ -1,0 +1,1 @@
+ L:\\ALTASH\\bridge_apk_demo\\.dart_tool\\flutter_build\\8722fb330a254386c0fe857e1b272d2a\\native_assets.json: 
