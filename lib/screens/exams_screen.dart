@@ -73,31 +73,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
     await _loadExams();
   }
 
-  // TODO: Add toggle save for exams if needed (exam model doesn't have isSaved yet?)
-  // Wait, I updated Course model to have isSaved. Did I update Exam model?
-  // I only updated ID type in Exam model.
-  // I should check if Exam model has isSaved.
-  // The user request for Exam model didn't specify isSaved, but user request for features says "List All Enabled Exams", "Save Exam", "Unsave", "My Saved Exams".
-  // The API response for "My Saved Exams" will return exams.
-  // The API response for "List All Exams" usually has `is_saved` flag if authenticated.
-  // I should update Exam model to include `isSaved` if I want to show the bookmark icon state correctly.
-  // For now, I'll assume it doesn't and just implement the listing, or check the model file again.
-  // Checked: exam_model.dart doesn't have `isSaved`.
-  // I should add `isSaved` to `Exam` model to support this feature properly.
-  // Given I'm in the middle of writing this file, I will leave logic commented or generic.
-  // Actually, I should update the Exam model first.
-
-  // Implementing without isSaved for now (user might just see list), or I handle saving separately.
-  // But to toggle, I need state.
-  // I'll update Exam model in next step. For now I'll just write the screen code assuming `isSaved` exists (and it will fail/warn), or better,
-  // I'll implementation the UI and comment out the toggle logic or use a local map for saved state if model doesn't have it.
-  // Better: I will update the Exam model in the *same* step? No, multi-step.
-  // I'll write this file assuming `isSaved` is available, and then immediately update `Exam` model to include it.
-
-  // Re-reading Exam model:
-  // fields: id (int), name, description, date, educationLevel, subject, duration, examType.
-  // I will add `bool isSaved` to it.
-
   Future<void> _toggleSave(int examId) async {
     final index = _exams.indexWhere((e) => e.id == examId);
     if (index == -1) return;
@@ -143,14 +118,13 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Filter logic is handled by API for main list, but for saved list we might want client side filter?
-    // Or just hide filter if showing saved.
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
           widget.showSaved ? 'Saved Exams' : 'Upcoming Exams',
-          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
       body: RefreshIndicator(
@@ -163,8 +137,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
               if (!widget.showSaved) ...[
                 Text(
                   'Find Your Exams',
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
@@ -172,10 +145,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'Stay updated with exam schedules',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
                 ),
                 const SizedBox(height: 20),
                 // Filter Dropdown
@@ -183,12 +155,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
                   value: _selectedLevel,
                   decoration: InputDecoration(
                     labelText: 'Filter by Level',
-                    labelStyle: GoogleFonts.poppins(color: Colors.grey[600]),
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
+                    prefixIcon: Icon(
+                      Icons.filter_list,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   items: const [
@@ -228,121 +197,131 @@ class _ExamsScreenState extends State<ExamsScreen> {
                     : ListView.separated(
                         itemCount: _exams.length,
                         separatorBuilder: (context, index) =>
-                            const SizedBox(height: 15),
+                            const SizedBox(height: 16),
                         itemBuilder: (context, index) {
                           final exam = _exams[index];
                           return Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFF6C63FF,
-                                          ).withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(
-                                            8,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(16),
+                              onTap: () {},
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(
+                                              context,
+                                            ).primaryColor.withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            Icons.calendar_today,
+                                            color: Theme.of(
+                                              context,
+                                            ).primaryColor,
+                                            size: 20,
                                           ),
                                         ),
-                                        child: const Icon(
-                                          Icons.calendar_today,
-                                          color: Color(0xFF6C63FF),
-                                          size: 20,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 15),
-                                      Expanded(
-                                        child: Text(
-                                          exam.name,
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black87,
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: Text(
+                                            exam.name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                         ),
-                                      ),
-                                      // Bookmark icon (placeholder fun)
-                                      IconButton(
-                                        icon: Icon(
-                                          exam.isSaved
-                                              ? Icons.bookmark
-                                              : Icons.bookmark_border,
-                                          color: const Color(0xFF6C63FF),
+                                        IconButton(
+                                          icon: Icon(
+                                            exam.isSaved
+                                                ? Icons.bookmark
+                                                : Icons.bookmark_border,
+                                            color: Theme.of(
+                                              context,
+                                            ).primaryColor,
+                                          ),
+                                          onPressed: () => _toggleSave(exam.id),
                                         ),
-                                        onPressed: () => _toggleSave(exam.id),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 15),
-                                  Text(
-                                    exam.description,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      color: Colors.grey[700],
-                                      height: 1.5,
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(height: 15),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.school,
-                                        size: 16,
-                                        color: Colors.grey[600],
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        exam.educationLevel,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      exam.description,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            color: Colors.grey[700],
+                                            height: 1.5,
+                                          ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Row(
+                                      children: [
+                                        _buildTag(
+                                          context,
+                                          icon: Icons.school,
+                                          label: exam.educationLevel,
+                                          color: Colors.grey[700]!,
+                                          bgColor: Colors.grey[200]!,
                                         ),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      Icon(
-                                        Icons.book,
-                                        size: 16,
-                                        color: Colors.grey[600],
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        exam.subject,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
+                                        const SizedBox(width: 12),
+                                        _buildTag(
+                                          context,
+                                          icon: Icons.book,
+                                          label: exam.subject,
+                                          color: Colors.grey[700]!,
+                                          bgColor: Colors.grey[200]!,
                                         ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 8,
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 15),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(
-                                      'Date: ${exam.date}',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 14,
-                                        color: Colors.grey[800],
-                                        fontWeight: FontWeight.w500,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: Colors.grey[300]!,
+                                        ),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.access_time,
+                                            size: 16,
+                                            color: Colors.grey[600],
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            'Date: ${exam.date}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.grey[800],
+                                                ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -352,6 +331,38 @@ class _ExamsScreenState extends State<ExamsScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTag(
+    BuildContext context, {
+    IconData? icon,
+    required String label,
+    required Color color,
+    required Color bgColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 14, color: color),
+            const SizedBox(width: 4),
+          ],
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

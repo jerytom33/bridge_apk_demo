@@ -213,13 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.white,
                           size: 24.0,
                         )
-                      : Text(
-                          'Log In',
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                      : const Text('Log In'),
                 ),
               ),
               const SizedBox(height: 20),
@@ -288,26 +282,15 @@ class _LoginScreenState extends State<LoginScreen> {
       keyboardType: keyboardType,
       obscureText: obscureText,
       validator: validator,
-      style: const TextStyle(color: Colors.black),
+      // style: const TextStyle(color: Colors.black), // Inherited from global theme
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(color: Colors.grey[600]),
-        filled: true,
-        fillColor: Colors.grey[100],
-        prefixIcon: Icon(icon, color: const Color(0xFF6C63FF)),
+        // labelStyle: TextStyle(color: Colors.grey[600]), // Inherited
+        // filled: true, // Inherited
+        // fillColor: Colors.grey[100], // Inherited
+        prefixIcon: Icon(icon, color: Theme.of(context).primaryColor),
         suffixIcon: suffixIcon,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide(color: const Color(0xFF6C63FF), width: 1.5),
-        ),
+        // Borders inherited from InputTheme
       ),
     );
   }

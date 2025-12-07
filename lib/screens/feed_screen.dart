@@ -168,8 +168,7 @@ class _FeedScreenState extends State<FeedScreen> {
             children: [
               Text(
                 'Latest Updates',
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -177,10 +176,9 @@ class _FeedScreenState extends State<FeedScreen> {
               const SizedBox(height: 8),
               Text(
                 'Stay informed with career insights',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 20),
               Expanded(
@@ -196,14 +194,11 @@ class _FeedScreenState extends State<FeedScreen> {
                     : ListView.separated(
                         itemCount: _posts.length,
                         separatorBuilder: (context, index) =>
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 16),
                         itemBuilder: (context, index) {
                           final post = _posts[index];
                           return Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
+                            // Inherits CardTheme
                             child: Padding(
                               padding: const EdgeInsets.all(20),
                               child: Column(
@@ -216,20 +211,20 @@ class _FeedScreenState extends State<FeedScreen> {
                                         width: 40,
                                         height: 40,
                                         decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFF6C63FF,
-                                          ).withOpacity(0.1),
+                                          color: Theme.of(
+                                            context,
+                                          ).primaryColor.withOpacity(0.1),
                                           borderRadius: BorderRadius.circular(
                                             20,
                                           ),
                                         ),
                                         child: Icon(
                                           Icons.person,
-                                          color: const Color(0xFF6C63FF),
+                                          color: Theme.of(context).primaryColor,
                                           size: 20,
                                         ),
                                       ),
-                                      const SizedBox(width: 10),
+                                      const SizedBox(width: 12),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
@@ -237,45 +232,49 @@ class _FeedScreenState extends State<FeedScreen> {
                                           children: [
                                             Text(
                                               post.author,
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black87,
-                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
                                             Text(
                                               post.createdAt,
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 12,
-                                                color: Colors.grey[600],
-                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.copyWith(
+                                                    color: Colors.grey[600],
+                                                  ),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 15),
+                                  const SizedBox(height: 16),
                                   // Post Title
                                   Text(
                                     post.title,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 8),
                                   // Post Content
                                   Text(
                                     post.content,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      color: Colors.grey[800],
-                                      height: 1.5,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: Colors.grey[800],
+                                          height: 1.5,
+                                        ),
                                   ),
-                                  const SizedBox(height: 15),
+                                  const SizedBox(height: 16),
                                   // Action Buttons
                                   Row(
                                     children: [
@@ -302,28 +301,24 @@ class _FeedScreenState extends State<FeedScreen> {
                                               var color = isLiked
                                                   ? Colors.red
                                                   : Colors.grey;
-                                              Widget result;
-                                              if (count == 0) {
-                                                result = Text(
-                                                  'Like',
-                                                  style: GoogleFonts.poppins(
-                                                    color: color,
-                                                  ),
-                                                );
-                                              } else {
-                                                result = Text(
-                                                  count.toString(),
-                                                  style: GoogleFonts.poppins(
-                                                    color: color,
-                                                  ),
-                                                );
-                                              }
-                                              return result;
+                                              return Text(
+                                                count == 0
+                                                    ? 'Like'
+                                                    : count.toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium
+                                                    ?.copyWith(
+                                                      color: color,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                              );
                                             },
                                         onTap: (isLiked) =>
                                             _onLikeButtonTap(isLiked, post.id),
                                       ),
-                                      const SizedBox(width: 20),
+                                      const SizedBox(width: 24),
                                       // Save Button
                                       GestureDetector(
                                         onTap: () => _toggleSave(post.id),
@@ -333,19 +328,27 @@ class _FeedScreenState extends State<FeedScreen> {
                                               post.isSaved
                                                   ? Icons.bookmark
                                                   : Icons.bookmark_border,
-                                              color: const Color(0xFF6C63FF),
+                                              color: Theme.of(
+                                                context,
+                                              ).primaryColor,
                                             ),
-                                            const SizedBox(width: 5),
+                                            const SizedBox(width: 6),
                                             Text(
                                               'Save',
-                                              style: GoogleFonts.poppins(
-                                                color: const Color(0xFF6C63FF),
-                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                    color: Theme.of(
+                                                      context,
+                                                    ).primaryColor,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(width: 20),
+                                      const SizedBox(width: 24),
                                       // Share Button
                                       GestureDetector(
                                         onTap: () => _sharePost(
@@ -358,12 +361,16 @@ class _FeedScreenState extends State<FeedScreen> {
                                               Icons.share,
                                               color: Colors.grey[600],
                                             ),
-                                            const SizedBox(width: 5),
+                                            const SizedBox(width: 6),
                                             Text(
                                               'Share',
-                                              style: GoogleFonts.poppins(
-                                                color: Colors.grey[600],
-                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                    color: Colors.grey[600],
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                             ),
                                           ],
                                         ),

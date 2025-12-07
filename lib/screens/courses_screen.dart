@@ -144,8 +144,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
             children: [
               Text(
                 'Explore Courses',
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -153,26 +152,18 @@ class _CoursesScreenState extends State<CoursesScreen> {
               const SizedBox(height: 8),
               Text(
                 'Discover trending courses in your field',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 20),
               // Search Bar
               TextField(
                 decoration: InputDecoration(
                   hintText: 'Search courses...',
-                  hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.search,
-                    color: Color(0xFF6C63FF),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
               ),
@@ -189,168 +180,100 @@ class _CoursesScreenState extends State<CoursesScreen> {
                     : ListView.separated(
                         itemCount: _courses.length,
                         separatorBuilder: (context, index) =>
-                            const SizedBox(height: 15),
+                            const SizedBox(height: 16),
                         itemBuilder: (context, index) {
                           final course = _courses[index];
                           return Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          course.title,
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black87,
+                            // Inherits CardTheme
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(16),
+                              onTap: () {
+                                // Navigate to details
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            course.title,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          course.isSaved
-                                              ? Icons.bookmark
-                                              : Icons.bookmark_border,
-                                          color: const Color(0xFF6C63FF),
+                                        IconButton(
+                                          icon: Icon(
+                                            course.isSaved
+                                                ? Icons.bookmark
+                                                : Icons.bookmark_border,
+                                            color: Theme.of(
+                                              context,
+                                            ).primaryColor,
+                                          ),
+                                          onPressed: () =>
+                                              _toggleSave(course.id),
                                         ),
-                                        onPressed: () => _toggleSave(course.id),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'by ${course.provider}',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      color: Colors.grey[700],
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(height: 15),
-                                  // Rating and Stats
-                                  Row(
-                                    children: [
-                                      // Rating
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'by ${course.provider}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(color: Colors.grey[700]),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    // Rating and Stats
+                                    Row(
+                                      children: [
+                                        _buildTag(
+                                          context,
+                                          icon: Icons.star,
+                                          label: course.rating.toString(),
+                                          color: Colors.amber,
+                                          bgColor: Colors.amber[100]!,
                                         ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.amber[100],
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
+                                        const SizedBox(width: 12),
+                                        _buildTag(
+                                          context,
+                                          icon: Icons.people,
+                                          label: 'N/A',
+                                          color: Colors.grey,
+                                          bgColor: Colors.grey[200]!,
                                         ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(
-                                              Icons.star,
-                                              size: 16,
-                                              color: Colors.amber,
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              course.rating.toString(),
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                    // Level and Category Tags
+                                    Row(
+                                      children: [
+                                        _buildTag(
+                                          context,
+                                          label: course.careerPath,
+                                          color: Theme.of(context).primaryColor,
+                                          bgColor: Theme.of(
+                                            context,
+                                          ).primaryColor.withOpacity(0.1),
                                         ),
-                                      ),
-                                      const SizedBox(width: 15),
-                                      // Enrolled Students
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
+                                        const SizedBox(width: 10),
+                                        _buildTag(
+                                          context,
+                                          label: course.duration,
+                                          color: Colors.grey[800]!,
+                                          bgColor: Colors.grey[200]!,
                                         ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[200],
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(
-                                              Icons.people,
-                                              size: 16,
-                                              color: Colors.grey,
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              'N/A',
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 15),
-                                  // Level and Category Tags
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 6,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: const Color(
-                                            0xFF6C63FF,
-                                          ).withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          course.careerPath,
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 12,
-                                            color: const Color(0xFF6C63FF),
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 6,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[200],
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          course.duration,
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 12,
-                                            color: Colors.grey[800],
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -360,6 +283,38 @@ class _CoursesScreenState extends State<CoursesScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTag(
+    BuildContext context, {
+    IconData? icon,
+    required String label,
+    required Color color,
+    required Color bgColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 14, color: color),
+            const SizedBox(width: 4),
+          ],
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
