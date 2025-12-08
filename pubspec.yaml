@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
   flutter_spinkit: ^5.2.2  # For loading indicators in splash screen
   dio: ^5.4.0  # For HTTP requests
+  http: ^1.1.0  # For HTTP requests (used by notification service)
   flutter_secure_storage: ^9.0.0
   file_picker: ^8.0.0
   share_plus: ^7.2.2

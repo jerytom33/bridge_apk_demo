@@ -5,10 +5,35 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 
+class ApiConfig {
+  // Check if user explicitly wants production backend
+  static const bool useProduction = bool.fromEnvironment(
+    'USE_PRODUCTION',
+    defaultValue: false,
+  );
+
+  // Check if running in release mode
+  static const bool isRelease = bool.fromEnvironment('dart.vm.product');
+
+  static String get baseUrl {
+    // Use production if explicitly requested OR if in release mode
+    if (useProduction || isRelease) {
+      return 'https://bridgeit-backend.onrender.com/api'; // Production
+    }
+    return 'http://192.168.29.174:8000/api'; // Local development
+  }
+
+  // Helper to check current environment
+  static String get environment {
+    if (useProduction) return 'Production (Forced)';
+    if (isRelease) return 'Production (Release)';
+    return 'Development (Local)';
+  }
+}
+
 class ApiService {
-  // Android uses 10.0.2.2 to refer to the host machine's localhost
-  // For physical devices on the same network, use your PC's IP address instead
-  static const String baseUrl = 'http://192.168.29.174:8000/api';
+  // Use environment-based configuration
+  static String get baseUrl => ApiConfig.baseUrl;
 
   static Future<bool> verifyConnection() async {
     try {
@@ -901,5 +926,99 @@ class ApiService {
 
   static Future<void> logout() async {
     await _clearAuthData();
+  }
+
+  // Notification endpoints
+  static Future<Map<String, dynamic>> getNotifications() async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        return {'success': false, 'error': 'Not authenticated'};
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/core/notifications/'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return {'success': true, 'data': data};
+      } else {
+        final error = jsonDecode(response.body);
+        return {
+          'success': false,
+          'error': error['error'] ?? 'Failed to fetch notifications',
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> markNotificationAsRead(
+    int notificationId,
+  ) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        return {'success': false, 'error': 'Not authenticated'};
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/core/notifications/$notificationId/mark-read/'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return {'success': true};
+      } else {
+        final error = jsonDecode(response.body);
+        return {
+          'success': false,
+          'error': error['error'] ?? 'Failed to mark notification as read',
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> markAllNotificationsAsRead() async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        return {'success': false, 'error': 'Not authenticated'};
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/core/notifications/mark-all-read/'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return {'success': true};
+      } else {
+        final error = jsonDecode(response.body);
+        return {
+          'success': false,
+          'error': error['error'] ?? 'Failed to mark all notifications as read',
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
+    }
   }
 }

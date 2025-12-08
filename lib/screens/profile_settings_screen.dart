@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'dart:io';
 import '../services/api_service.dart';
-import '../providers/theme_provider.dart';
 import '../models/exam_model.dart';
 import '../models/course_model.dart';
 import 'login_screen.dart';
@@ -19,7 +20,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _dobController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _placeController = TextEditingController();
   final _feedbackController = TextEditingController();
+
+  final ImagePicker _picker = ImagePicker();
+  File? _profileImage;
+  String? _profileImageUrl;
 
   bool _isLoading = false;
   bool _isEditing = false;
@@ -48,6 +56,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
+    _dobController.dispose();
+    _addressController.dispose();
+    _placeController.dispose();
     _feedbackController.dispose();
     super.dispose();
   }
@@ -72,6 +83,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
       _nameController.text = _userName;
       _emailController.text = _userEmail;
       _phoneController.text = prefs.getString('user_phone') ?? '';
+      _dobController.text = prefs.getString('user_dob') ?? '';
+      _addressController.text = prefs.getString('user_address') ?? '';
+      _placeController.text = prefs.getString('user_place') ?? '';
+      _profileImageUrl = prefs.getString('user_profile_image');
     });
   }
 
@@ -197,11 +212,23 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         'interests': _userInterests,
         'career_goals': _userCareerGoals,
         'phone': _phoneController.text.trim(),
+        'dob': _dobController.text.trim(),
+        'address': _addressController.text.trim(),
+        'place': _placeController.text.trim(),
       };
 
       final result = await ApiService.updateStudentProfile(profileData);
 
       if (result['success']) {
+        // Save to SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_name', _nameController.text.trim());
+        await prefs.setString('user_email', _emailController.text.trim());
+        await prefs.setString('user_phone', _phoneController.text.trim());
+        await prefs.setString('user_dob', _dobController.text.trim());
+        await prefs.setString('user_address', _addressController.text.trim());
+        await prefs.setString('user_place', _placeController.text.trim());
+
         setState(() {
           _userName = _nameController.text.trim();
           _userEmail = _emailController.text.trim();
@@ -277,6 +304,60 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     }
   }
 
+  Future<void> _pickProfileImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        setState(() {
+          _profileImage = File(image.path);
+        });
+
+        // Save to SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_profile_image', image.path);
+
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile picture updated!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error picking image: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _pickDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().subtract(
+        const Duration(days: 6570),
+      ), // 18 years ago
+      firstDate: DateTime(1950),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        _dobController.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
+  }
+
   Future<void> _logout() async {
     try {
       await ApiService.logout();
@@ -348,6 +429,49 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Profile Picture at Top (Standard UX)
+                  Center(
+                    child: GestureDetector(
+                      onTap: _pickProfileImage,
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundImage: _profileImage != null
+                                ? FileImage(_profileImage!)
+                                : (_profileImageUrl != null &&
+                                          _profileImageUrl!.isNotEmpty
+                                      ? FileImage(File(_profileImageUrl!))
+                                      : null),
+                            child:
+                                (_profileImage == null &&
+                                    (_profileImageUrl == null ||
+                                        _profileImageUrl!.isEmpty))
+                                ? const Icon(Icons.person, size: 60)
+                                : null,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.camera_alt,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
                   // Profile Section
                   Card(
                     child: Padding(
@@ -448,6 +572,49 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                                 ),
                                 const SizedBox(height: 16),
 
+                                // Date of Birth Field
+                                TextFormField(
+                                  controller: _dobController,
+                                  enabled: _isEditing,
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Date of Birth',
+                                    prefixIcon: Icon(Icons.calendar_today),
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Select your date of birth',
+                                  ),
+                                  onTap: _isEditing ? _pickDate : null,
+                                ),
+                                const SizedBox(height: 16),
+
+                                // Place/City Field
+                                TextFormField(
+                                  controller: _placeController,
+                                  enabled: _isEditing,
+                                  decoration: const InputDecoration(
+                                    labelText: 'City/Place',
+                                    prefixIcon: Icon(Icons.location_city),
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Enter your city',
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+
+                                // Address Field
+                                TextFormField(
+                                  controller: _addressController,
+                                  enabled: _isEditing,
+                                  maxLines: 3,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Address',
+                                    prefixIcon: Icon(Icons.home),
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Enter your full address',
+                                    alignLabelWithHint: true,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+
                                 // Education Level
                                 if (!_isEditing)
                                   ListTile(
@@ -521,27 +688,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                             ),
                           ),
                           const SizedBox(height: 16),
-
-                          // Dark Mode Toggle
-                          Consumer<ThemeProvider>(
-                            builder: (context, themeProvider, child) {
-                              return SwitchListTile(
-                                title: const Text('Dark Mode'),
-                                subtitle: const Text('Toggle dark/light theme'),
-                                value: themeProvider.isDarkMode,
-                                onChanged: (value) {
-                                  themeProvider.toggleTheme();
-                                },
-                                secondary: Icon(
-                                  themeProvider.isDarkMode
-                                      ? Icons.dark_mode
-                                      : Icons.light_mode,
-                                ),
-                              );
-                            },
-                          ),
-
-                          const Divider(),
 
                           // Notifications
                           ListTile(

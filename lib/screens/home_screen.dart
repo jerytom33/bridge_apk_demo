@@ -7,6 +7,7 @@ import 'exams_screen.dart';
 import 'courses_screen.dart';
 import 'feed_screen.dart';
 import 'trending_courses_screen.dart';
+import '../widgets/notification_badge.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -52,13 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.notifications_outlined,
-              color: Colors.black87,
-            ),
-            onPressed: () {},
-          ),
+          const NotificationBadge(),
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: CircleAvatar(
