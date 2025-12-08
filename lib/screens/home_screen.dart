@@ -6,69 +6,15 @@ import 'education_level_selection_screen.dart';
 import 'exams_screen.dart';
 import 'courses_screen.dart';
 import 'feed_screen.dart';
-import 'profile_screen.dart';
 import 'trending_courses_screen.dart';
 import '../widgets/notification_badge.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
-
-  final List<Widget> _screens = [
-    const HomeContent(),
-    const FeedScreen(),
-    const ProfileScreen(),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: _onTabTapped,
-        selectedItemColor: const Color(0xFF6C63FF),
-        unselectedItemColor: Colors.grey[600],
-        selectedLabelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w500),
-        unselectedLabelStyle: GoogleFonts.poppins(),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.feed_outlined),
-            activeIcon: Icon(Icons.feed),
-            label: 'Feed',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
+    return const HomeContent();
   }
 }
 
