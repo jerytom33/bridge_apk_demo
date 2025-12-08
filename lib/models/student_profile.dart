@@ -4,22 +4,22 @@ part 'student_profile.g.dart';
 
 @JsonSerializable()
 class StudentProfile {
-  final int id;
-  final String currentLevel;
-  final String stream;
-  final List<String> interests;
-  final String careerGoals;
-  final String phone;
-  final String dateOfBirth;
+  final int? id;
+  final String? currentLevel;
+  final String? stream;
+  final List<String>? interests;
+  final String? careerGoals;
+  final String? phone;
+  final String? dateOfBirth;
 
   StudentProfile({
-    required this.id,
-    required this.currentLevel,
-    required this.stream,
-    required this.interests,
-    required this.careerGoals,
-    required this.phone,
-    required this.dateOfBirth,
+    this.id,
+    this.currentLevel,
+    this.stream,
+    this.interests,
+    this.careerGoals,
+    this.phone,
+    this.dateOfBirth,
   });
 
   factory StudentProfile.fromJson(Map<String, dynamic> json) =>

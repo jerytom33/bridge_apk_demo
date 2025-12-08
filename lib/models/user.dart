@@ -4,9 +4,9 @@ part 'user.g.dart';
 
 @JsonSerializable()
 class User {
-  final int id;
-  final String name;
-  final String email;
+  final int? id;
+  final String? name;
+  final String? email;
   final String? phone;
   final String? gender;
   final String? dob;
@@ -16,9 +16,9 @@ class User {
   final String? photo;
 
   User({
-    required this.id,
-    required this.name,
-    required this.email,
+    this.id,
+    this.name,
+    this.email,
     this.phone,
     this.gender,
     this.dob,

@@ -11,11 +11,11 @@ Exam _$ExamFromJson(Map<String, dynamic> json) => Exam(
   title: json['title'] as String,
   category: json['category'] as String,
   level: json['level'] as String,
-  lastDate: json['last_date'] as String,
+  lastDate: json['lastDate'] as String,
   link: json['link'] as String,
   description: json['description'] as String,
-  isActive: json['is_active'] as bool,
-  createdAt: json['created_at'] as String,
+  isActive: json['isActive'] as bool,
+  createdAt: json['createdAt'] as String,
 );
 
 Map<String, dynamic> _$ExamToJson(Exam instance) => <String, dynamic>{
@@ -23,9 +23,9 @@ Map<String, dynamic> _$ExamToJson(Exam instance) => <String, dynamic>{
   'title': instance.title,
   'category': instance.category,
   'level': instance.level,
-  'last_date': instance.lastDate,
+  'lastDate': instance.lastDate,
   'link': instance.link,
   'description': instance.description,
-  'is_active': instance.isActive,
-  'created_at': instance.createdAt,
+  'isActive': instance.isActive,
+  'createdAt': instance.createdAt,
 };

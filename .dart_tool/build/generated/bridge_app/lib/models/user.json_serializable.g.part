@@ -1,0 +1,29 @@
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+User _$UserFromJson(Map<String, dynamic> json) => User(
+  id: (json['id'] as num?)?.toInt(),
+  name: json['name'] as String?,
+  email: json['email'] as String?,
+  phone: json['phone'] as String?,
+  gender: json['gender'] as String?,
+  dob: json['dob'] as String?,
+  state: json['state'] as String?,
+  district: json['district'] as String?,
+  place: json['place'] as String?,
+  photo: json['photo'] as String?,
+);
+
+Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'email': instance.email,
+  'phone': instance.phone,
+  'gender': instance.gender,
+  'dob': instance.dob,
+  'state': instance.state,
+  'district': instance.district,
+  'place': instance.place,
+  'photo': instance.photo,
+};

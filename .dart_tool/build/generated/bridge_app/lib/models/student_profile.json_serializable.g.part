@@ -1,0 +1,27 @@
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+StudentProfile _$StudentProfileFromJson(Map<String, dynamic> json) =>
+    StudentProfile(
+      id: (json['id'] as num?)?.toInt(),
+      currentLevel: json['currentLevel'] as String?,
+      stream: json['stream'] as String?,
+      interests: (json['interests'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      careerGoals: json['careerGoals'] as String?,
+      phone: json['phone'] as String?,
+      dateOfBirth: json['dateOfBirth'] as String?,
+    );
+
+Map<String, dynamic> _$StudentProfileToJson(StudentProfile instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'currentLevel': instance.currentLevel,
+      'stream': instance.stream,
+      'interests': instance.interests,
+      'careerGoals': instance.careerGoals,
+      'phone': instance.phone,
+      'dateOfBirth': instance.dateOfBirth,
+    };

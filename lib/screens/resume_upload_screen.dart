@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:io';
+import 'dart:async';
+import '../services/resume_api_service.dart';
 import 'resume_result_screen.dart';
 
 class ResumeUploadScreen extends StatefulWidget {
@@ -55,14 +58,38 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
     });
 
     try {
-      // Simulate upload process
-      await Future.delayed(const Duration(seconds: 2));
+      // Create API service instance
+      final apiService = ResumeApiService();
+
+      // Create File object from picked file
+      final file = File(_pickedFile!.path!);
+
+      // Call API to upload and analyze resume
+      final analysis = await apiService.uploadResume(file);
 
       if (mounted) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ResumeResultScreen(),
+            builder: (context) => ResumeResultScreen(analysis: analysis),
+          ),
+        );
+      }
+    } on SocketException {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No internet connection. Please check your network.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } on TimeoutException {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Request timeout. Please try again.'),
+            backgroundColor: Colors.red,
           ),
         );
       }
@@ -70,8 +97,9 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Upload failed: $e'),
+            content: Text(e.toString().replaceAll('Exception: ', '')),
             backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
           ),
         );
       }
@@ -90,10 +118,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
       appBar: AppBar(
         title: Text(
           'Upload Resume',
-          style: GoogleFonts.poppins(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
       body: Padding(
@@ -113,10 +138,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
             const SizedBox(height: 10),
             Text(
               'Upload your resume for AI-powered career insights',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
+              style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),

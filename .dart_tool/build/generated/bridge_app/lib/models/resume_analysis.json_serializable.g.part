@@ -1,0 +1,51 @@
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+ResumeAnalysis _$ResumeAnalysisFromJson(Map<String, dynamic> json) =>
+    ResumeAnalysis(
+      id: (json['id'] as num).toInt(),
+      user: (json['user'] as num).toInt(),
+      pdfFile: json['pdfFile'] as String,
+      geminiResponse: ResumeGeminiResponse.fromJson(
+        json['geminiResponse'] as Map<String, dynamic>,
+      ),
+      createdAt: json['createdAt'] as String,
+    );
+
+Map<String, dynamic> _$ResumeAnalysisToJson(ResumeAnalysis instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'user': instance.user,
+      'pdfFile': instance.pdfFile,
+      'geminiResponse': instance.geminiResponse,
+      'createdAt': instance.createdAt,
+    };
+
+ResumeGeminiResponse _$ResumeGeminiResponseFromJson(
+  Map<String, dynamic> json,
+) => ResumeGeminiResponse(
+  suitableCareerPaths: (json['suitableCareerPaths'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+  skillGaps: (json['skillGaps'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+  recommendedCourses: (json['recommendedCourses'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+  suggestedNextSteps: (json['suggestedNextSteps'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+  overallSummary: json['overallSummary'] as String,
+);
+
+Map<String, dynamic> _$ResumeGeminiResponseToJson(
+  ResumeGeminiResponse instance,
+) => <String, dynamic>{
+  'suitableCareerPaths': instance.suitableCareerPaths,
+  'skillGaps': instance.skillGaps,
+  'recommendedCourses': instance.recommendedCourses,
+  'suggestedNextSteps': instance.suggestedNextSteps,
+  'overallSummary': instance.overallSummary,
+};

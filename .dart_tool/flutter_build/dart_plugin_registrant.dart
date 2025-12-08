@@ -11,11 +11,13 @@ import 'package:image_picker_android/image_picker_android.dart' as image_picker_
 import 'package:path_provider_android/path_provider_android.dart' as path_provider_android;
 import 'package:shared_preferences_android/shared_preferences_android.dart' as shared_preferences_android;
 import 'package:sqflite_android/sqflite_android.dart' as sqflite_android;
+import 'package:url_launcher_android/url_launcher_android.dart' as url_launcher_android;
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:image_picker_ios/image_picker_ios.dart' as image_picker_ios;
 import 'package:path_provider_foundation/path_provider_foundation.dart' as path_provider_foundation;
 import 'package:shared_preferences_foundation/shared_preferences_foundation.dart' as shared_preferences_foundation;
 import 'package:sqflite_darwin/sqflite_darwin.dart' as sqflite_darwin;
+import 'package:url_launcher_ios/url_launcher_ios.dart' as url_launcher_ios;
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:file_selector_linux/file_selector_linux.dart' as file_selector_linux;
 import 'package:image_picker_linux/image_picker_linux.dart' as image_picker_linux;
@@ -29,6 +31,7 @@ import 'package:image_picker_macos/image_picker_macos.dart' as image_picker_maco
 import 'package:path_provider_foundation/path_provider_foundation.dart' as path_provider_foundation;
 import 'package:shared_preferences_foundation/shared_preferences_foundation.dart' as shared_preferences_foundation;
 import 'package:sqflite_darwin/sqflite_darwin.dart' as sqflite_darwin;
+import 'package:url_launcher_macos/url_launcher_macos.dart' as url_launcher_macos;
 import 'package:file_picker/file_picker.dart' as file_picker;
 import 'package:file_selector_windows/file_selector_windows.dart' as file_selector_windows;
 import 'package:flutter_secure_storage_windows/flutter_secure_storage_windows.dart' as flutter_secure_storage_windows;
@@ -89,6 +92,15 @@ class _PluginRegistrant {
         );
       }
 
+      try {
+        url_launcher_android.UrlLauncherAndroid.registerWith();
+      } catch (err) {
+        print(
+          '`url_launcher_android` threw an error: $err. '
+          'The app may not function as expected until you remove this plugin from pubspec.yaml'
+        );
+      }
+
     } else if (Platform.isIOS) {
       try {
         file_picker.FilePickerIO.registerWith();
@@ -131,6 +143,15 @@ class _PluginRegistrant {
       } catch (err) {
         print(
           '`sqflite_darwin` threw an error: $err. '
+          'The app may not function as expected until you remove this plugin from pubspec.yaml'
+        );
+      }
+
+      try {
+        url_launcher_ios.UrlLauncherIOS.registerWith();
+      } catch (err) {
+        print(
+          '`url_launcher_ios` threw an error: $err. '
           'The app may not function as expected until you remove this plugin from pubspec.yaml'
         );
       }
@@ -250,6 +271,15 @@ class _PluginRegistrant {
       } catch (err) {
         print(
           '`sqflite_darwin` threw an error: $err. '
+          'The app may not function as expected until you remove this plugin from pubspec.yaml'
+        );
+      }
+
+      try {
+        url_launcher_macos.UrlLauncherMacOS.registerWith();
+      } catch (err) {
+        print(
+          '`url_launcher_macos` threw an error: $err. '
           'The app may not function as expected until you remove this plugin from pubspec.yaml'
         );
       }

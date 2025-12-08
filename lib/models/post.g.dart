@@ -8,21 +8,22 @@ part of 'post.dart';
 
 Post _$PostFromJson(Map<String, dynamic> json) => Post(
   id: (json['id'] as num).toInt(),
-  title: json['content'] as String, // API uses content as the main text
+  title: json['title'] as String,
   content: json['content'] as String,
-  author: (json['author'] as Map<String, dynamic>)['username'] as String,
-  createdAt: json['created_at'] as String,
-  likeCount: (json['like_count'] as num?)?.toInt() ?? 0,
-  isLiked: json['is_liked'] as bool? ?? false,
-  isSaved: json['is_saved'] as bool? ?? false,
+  author: json['author'] as String,
+  createdAt: json['createdAt'] as String,
+  likeCount: (json['likeCount'] as num).toInt(),
+  isLiked: json['isLiked'] as bool,
+  isSaved: json['isSaved'] as bool,
 );
 
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
   'id': instance.id,
+  'title': instance.title,
   'content': instance.content,
   'author': instance.author,
-  'created_at': instance.createdAt,
-  'like_count': instance.likeCount,
-  'is_liked': instance.isLiked,
-  'is_saved': instance.isSaved,
+  'createdAt': instance.createdAt,
+  'likeCount': instance.likeCount,
+  'isLiked': instance.isLiked,
+  'isSaved': instance.isSaved,
 };
