@@ -5,47 +5,38 @@ import 'home_screen.dart';
 class AptitudeResultScreen extends StatelessWidget {
   final int score;
   final int total;
+  final int scienceScore;
+  final int commerceScore;
+  final int humanitiesScore;
+  final String educationLevel;
 
   const AptitudeResultScreen({
     super.key,
     required this.score,
     required this.total,
+    this.scienceScore = 0,
+    this.commerceScore = 0,
+    this.humanitiesScore = 0,
+    this.educationLevel = '10th',
   });
 
   @override
   Widget build(BuildContext context) {
     final percentage = (score / total * 100).round();
-    String grade;
-    Color gradeColor;
 
-    if (percentage >= 90) {
-      grade = 'A+';
-      gradeColor = Colors.green;
-    } else if (percentage >= 80) {
-      grade = 'A';
-      gradeColor = Colors.green;
-    } else if (percentage >= 70) {
-      grade = 'B';
-      gradeColor = Colors.lightGreen;
-    } else if (percentage >= 60) {
-      grade = 'C';
-      gradeColor = Colors.orange;
-    } else {
-      grade = 'D';
-      gradeColor = Colors.red;
-    }
+    // Determine recommended stream based on highest section score
+    String recommendedStream = _getRecommendedStream();
+    Color streamColor = _getStreamColor(recommendedStream);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Test Results',
-          style: GoogleFonts.poppins(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
         ),
+        automaticallyImplyLeading: false,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -59,18 +50,25 @@ class AptitudeResultScreen extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
+            const SizedBox(height: 10),
+            Text(
+              'Education Level: $educationLevel Passed',
+              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 30),
-            // Score Circle
+
+            // Overall Score Circle
             Center(
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   SizedBox(
-                    width: 200,
-                    height: 200,
+                    width: 180,
+                    height: 180,
                     child: CircularProgressIndicator(
                       value: percentage / 100,
-                      strokeWidth: 15,
+                      strokeWidth: 12,
                       backgroundColor: Colors.grey[300],
                       valueColor: AlwaysStoppedAnimation<Color>(
                         percentage >= 70 ? Colors.green : Colors.orange,
@@ -91,16 +89,8 @@ class AptitudeResultScreen extends StatelessWidget {
                       Text(
                         '$score/$total',
                         style: GoogleFonts.poppins(
-                          fontSize: 18,
+                          fontSize: 16,
                           color: Colors.grey[600],
-                        ),
-                      ),
-                      Text(
-                        grade,
-                        style: GoogleFonts.poppins(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: gradeColor,
                         ),
                       ),
                     ],
@@ -109,9 +99,95 @@ class AptitudeResultScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            // AI Analysis Section
-            _buildAnalysisSection(),
+
+            // Section-wise Scores
+            Text(
+              'Section-wise Performance',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            _buildSectionScore(
+              educationLevel == '10th' ? 'Science' : 'STEM & Technical',
+              scienceScore,
+              5,
+              const Color(0xFF6C63FF),
+              Icons.science,
+            ),
+            const SizedBox(height: 15),
+
+            _buildSectionScore(
+              educationLevel == '10th' ? 'Commerce' : 'Business & Finance',
+              commerceScore,
+              5,
+              const Color(0xFF00BFA5),
+              Icons.business,
+            ),
+            const SizedBox(height: 15),
+
+            _buildSectionScore(
+              educationLevel == '10th' ? 'Humanities' : 'Creative & Social',
+              humanitiesScore,
+              5,
+              const Color(0xFFFF6F00),
+              Icons.menu_book,
+            ),
             const SizedBox(height: 30),
+
+            // Recommendation Card
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: streamColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: streamColor.withOpacity(0.3),
+                  width: 2,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                    _getStreamIcon(recommendedStream),
+                    size: 48,
+                    color: streamColor,
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    'Recommended Stream',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    recommendedStream,
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: streamColor,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    _getStreamDescription(recommendedStream),
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.grey[700],
+                      height: 1.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 30),
+
             // Action Button
             SizedBox(
               height: 50,
@@ -145,100 +221,148 @@ class AptitudeResultScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAnalysisSection() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+  Widget _buildSectionScore(
+    String section,
+    int score,
+    int total,
+    Color color,
+    IconData icon,
+  ) {
+    final percentage = (score / total * 100).round();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.3)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 28),
+          ),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.analytics, color: const Color(0xFF6C63FF), size: 24),
-                const SizedBox(width: 10),
                 Text(
-                  'AI Analysis',
+                  section,
                   style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF6C63FF),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '$score out of $total questions',
+                  style: GoogleFonts.poppins(
+                    fontSize: 13,
+                    color: Colors.grey[600],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 15),
-            Text(
-              'Based on your performance, here\'s what our AI analysis suggests:',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                height: 1.5,
-                color: Colors.grey[800],
-              ),
-            ),
-            const SizedBox(height: 15),
-            _buildAnalysisPoint(
-              icon: Icons.check_circle,
-              color: Colors.green,
-              text: 'Strong analytical and problem-solving skills',
-            ),
-            const SizedBox(height: 10),
-            _buildAnalysisPoint(
-              icon: Icons.trending_up,
-              color: Colors.blue,
-              text: 'Good mathematical aptitude',
-            ),
-            const SizedBox(height: 10),
-            _buildAnalysisPoint(
-              icon: Icons.lightbulb,
-              color: Colors.orange,
-              text: 'Could improve in verbal reasoning section',
-            ),
-            const SizedBox(height: 15),
-            Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: const Color(0xFF6C63FF).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                'Recommended Careers: Data Analyst, Software Engineer, Financial Analyst',
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '$percentage%',
                 style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF6C63FF),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: color,
                 ),
               ),
-            ),
-          ],
-        ),
+              SizedBox(
+                width: 60,
+                child: LinearProgressIndicator(
+                  value: percentage / 100,
+                  backgroundColor: Colors.grey[300],
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildAnalysisPoint({
-    required IconData icon,
-    required Color color,
-    required String text,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            text,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              color: Colors.grey[800],
-            ),
-          ),
-        ),
-      ],
-    );
+  String _getRecommendedStream() {
+    if (scienceScore > commerceScore && scienceScore > humanitiesScore) {
+      return 'Science Stream';
+    } else if (commerceScore > scienceScore &&
+        commerceScore > humanitiesScore) {
+      return 'Commerce Stream';
+    } else if (humanitiesScore > scienceScore &&
+        humanitiesScore > commerceScore) {
+      return 'Humanities Stream';
+    } else {
+      // If there's a tie, default to Science
+      return 'Science Stream';
+    }
+  }
+
+  Color _getStreamColor(String stream) {
+    switch (stream) {
+      case 'Science Stream':
+        return const Color(0xFF6C63FF);
+      case 'Commerce Stream':
+        return const Color(0xFF00BFA5);
+      case 'Humanities Stream':
+        return const Color(0xFFFF6F00);
+      default:
+        return Colors.grey;
+    }
+  }
+
+  IconData _getStreamIcon(String stream) {
+    switch (stream) {
+      case 'Science Stream':
+        return Icons.science;
+      case 'Commerce Stream':
+        return Icons.business_center;
+      case 'Humanities Stream':
+        return Icons.auto_stories;
+      default:
+        return Icons.school;
+    }
+  }
+
+  String _getStreamDescription(String stream) {
+    if (educationLevel == '10th') {
+      // For 10th grade students
+      switch (stream) {
+        case 'Science Stream':
+          return 'You have strong logical deduction and analytical skills. You likely enjoy figuring out how things work. Consider careers in Engineering, Medicine, Research, or Technology.';
+        case 'Commerce Stream':
+          return 'You have good practical math skills, understand value/money, and have a logical approach to management. Consider careers in Business, Finance, Accounting, or Economics.';
+        case 'Humanities Stream':
+          return 'You excel in language, understanding abstract concepts, social dynamics, and critical thinking. Consider careers in Law, Psychology, Journalism, or Social Work.';
+        default:
+          return '';
+      }
+    } else {
+      // For 12th grade students - more specific career clusters
+      switch (stream) {
+        case 'Science Stream':
+          return 'Strong STEM aptitude! You excel in technical thinking and problem-solving. Recommended fields: Engineering, Medicine, IT, AI, Data Science, Research, Biotechnology.';
+        case 'Commerce Stream':
+          return 'Excellent business acumen! You have strategic thinking and financial aptitude. Recommended fields: B.Com, BBA, CA, CS, Economics, MBA, Finance, Marketing.';
+        case 'Humanities Stream':
+          return 'Outstanding creative and social intelligence! You have strong communication and empathy. Recommended fields: Law, Arts, Psychology, Media, Design, Journalism, Public Relations.';
+        default:
+          return '';
+      }
+    }
   }
 }

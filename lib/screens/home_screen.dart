@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'resume_upload_screen.dart';
-import 'aptitude_test_screen.dart';
+import 'education_level_selection_screen.dart';
 import 'exams_screen.dart';
 import 'courses_screen.dart';
 import 'feed_screen.dart';
+import 'profile_screen.dart';
 import 'trending_courses_screen.dart';
 import '../widgets/notification_badge.dart';
 
@@ -17,20 +18,63 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _userName = 'Student';
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    const HomeContent(),
+    const FeedScreen(),
+    const ProfileScreen(),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
   }
 
-  Future<void> _loadUserData() async {
-    final prefs = await SharedPreferences.getInstance();
+  void _onTabTapped(int index) {
     setState(() {
-      _userName = prefs.getString('user_name') ?? 'Student';
+      _currentIndex = index;
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        onTap: _onTabTapped,
+        selectedItemColor: const Color(0xFF6C63FF),
+        unselectedItemColor: Colors.grey[600],
+        selectedLabelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+        unselectedLabelStyle: GoogleFonts.poppins(),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.feed_outlined),
+            activeIcon: Icon(Icons.feed),
+            label: 'Feed',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Extracted the home content into a separate widget
+class HomeContent extends StatelessWidget {
+  const HomeContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -71,20 +115,31 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Greeting
-              Text(
-                'Hi $_userName,',
-                style: GoogleFonts.poppins(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              Text(
-                'welcome back',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
+              FutureBuilder<String>(
+                future: _getUserName(),
+                builder: (context, snapshot) {
+                  final userName = snapshot.data ?? 'Student';
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hi $userName,',
+                        style: GoogleFonts.poppins(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Text(
+                        'welcome back',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 24),
 
@@ -94,7 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const AptitudeTestScreen(),
+                      builder: (context) =>
+                          const EducationLevelSelectionScreen(),
                     ),
                   );
                 },
@@ -163,6 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Expanded(
                     child: _buildWhiteCard(
+                      context,
                       'Resume',
                       Icons.description_outlined,
                       () {
@@ -177,14 +234,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _buildWhiteCard('Aptitude', Icons.quiz_outlined, () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AptitudeTestScreen(),
-                        ),
-                      );
-                    }),
+                    child: _buildWhiteCard(
+                      context,
+                      'Aptitude',
+                      Icons.quiz_outlined,
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const EducationLevelSelectionScreen(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -193,6 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Expanded(
                     child: _buildWhiteCard(
+                      context,
                       'Exams',
                       Icons.calendar_month_outlined,
                       () {
@@ -208,6 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: _buildWhiteCard(
+                      context,
                       'Courses',
                       Icons.school_outlined,
                       () {
@@ -238,6 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Expanded(
                     child: _buildGradientButton(
+                      context,
                       'Feed',
                       const LinearGradient(
                         colors: [Color(0xFF6C63FF), Color(0xFF9B59FF)],
@@ -257,6 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: _buildGradientButton(
+                      context,
                       'Trending',
                       const LinearGradient(
                         colors: [Color(0xFFFF6B6B), Color(0xFFFFB84D)],
@@ -283,7 +350,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildWhiteCard(String title, IconData icon, VoidCallback onTap) {
+  Future<String> _getUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_name') ?? 'Student';
+  }
+
+  static Widget _buildWhiteCard(
+    BuildContext context,
+    String title,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -307,7 +384,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildGradientButton(
+  static Widget _buildGradientButton(
+    BuildContext context,
     String title,
     Gradient gradient,
     VoidCallback onTap,
