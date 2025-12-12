@@ -24,6 +24,15 @@ class _NotificationBadgeState extends State<NotificationBadge> {
       const Duration(minutes: 1),
       (_) => loadUnreadCount(),
     );
+
+    // Listen to real-time FCM messages and update badge immediately
+    _notificationService.setupForegroundListener(() {
+      print('🔔 Badge: FCM message received, refreshing badge...');
+      // When a new notification arrives, refresh the badge
+      if (mounted) {
+        loadUnreadCount();
+      }
+    });
   }
 
   @override

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "735514489758",
+    "project_id": "bridge-it-world",
+    "storage_bucket": "bridge-it-world.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735514489758:android:b407432a3b3dad87ff9c8f",
+        "android_client_info": {
+          "package_name": "com.brigeit.world"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBjmLAvrsgcYi2cDzhlzxb4OrGZxQLoOU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -16,11 +16,16 @@ class ApiConfig {
   static const bool isRelease = bool.fromEnvironment('dart.vm.product');
 
   static String get baseUrl {
-    // Use production if explicitly requested OR if in release mode
-    if (useProduction || isRelease) {
-      return 'https://bridgeit-backend.onrender.com/api'; // Production
-    }
-    return 'http://192.168.29.174:8000/api'; // Local development
+    // Temporarily using Render.com backend due to emulator networking issues
+    // To use local backend, set USE_PRODUCTION=false and fix firewall/networking
+    // if (useProduction || isRelease) {
+    return 'https://bridgeit-backend.onrender.com/api'; // Production (Render.com)
+    // }
+    // Local backend running on 0.0.0.0:8000
+    // For emulator: use 10.0.2.2 (maps to host machine)
+    // For physical device: use 192.168.29.174 (your local IP)
+    // return 'http://10.0.2.2:8000/api'; // Local development (emulator)
+    // return 'http://192.168.29.174:8000/api'; // Uncomment for physical device
   }
 
   // Helper to check current environment

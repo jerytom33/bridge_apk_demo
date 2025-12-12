@@ -6,8 +6,20 @@ import 'providers/auth_provider.dart';
 import 'providers/profile_provider.dart';
 import 'providers/feed_provider.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'services/notification_service.dart';
+// import 'firebase_options.dart'; // Add generated options import
+import 'screens/main_wrapper.dart'; // Import MainWrapper
+import 'screens/feed_screen.dart'; // Import FeedScreen
+import 'screens/courses_screen.dart'; // Import CoursesScreen
+import 'screens/notifications_screen.dart'; // Import NotificationsScreen
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await NotificationService().initNotifications();
 
   runApp(
     MultiProvider(
@@ -28,7 +40,14 @@ class BridgeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Bridge It - Career Guidance',
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
+      routes: {
+        '/home': (context) => const MainWrapper(),
+        '/feed': (context) => const FeedScreen(),
+        '/courses': (context) => const CoursesScreen(),
+        '/notifications': (context) => const NotificationsScreen(),
+      },
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
