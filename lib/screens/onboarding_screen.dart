@@ -53,8 +53,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     });
 
     try {
-      final profileProvider =
-          Provider.of<ProfileProvider>(context, listen: false);
+      final profileProvider = Provider.of<ProfileProvider>(
+        context,
+        listen: false,
+      );
       final result = await profileProvider.setupProfile({
         'education_level': _educationLevelController.text,
         'stream': _streamController.text,
@@ -85,10 +87,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -302,12 +301,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: controller.text.isEmpty ? null : controller.text,
+          isExpanded: true, // Fix overflow by expanding to fill width
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey[400]),
             filled: true,
             fillColor: Colors.grey[100],
             prefixIcon: Icon(icon, color: const Color(0xFF6C63FF)),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 16,
+            ), // Reduce padding
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -325,10 +329,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           items: items.map((String item) {
-            return DropdownMenuItem(
-              value: item,
-              child: Text(item),
-            );
+            return DropdownMenuItem(value: item, child: Text(item));
           }).toList(),
           onChanged: (value) {
             if (value != null) {
@@ -378,8 +379,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
                 side: BorderSide(
-                  color:
-                      isSelected ? const Color(0xFF6C63FF) : Colors.grey[300]!,
+                  color: isSelected
+                      ? const Color(0xFF6C63FF)
+                      : Colors.grey[300]!,
                 ),
               ),
             );

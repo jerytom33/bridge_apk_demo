@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/resume_analysis_result.dart';
 
 class ResumeApiService {
-  // Using the same base URL pattern as the main API service
-  static const String baseUrl = 'http://192.168.29.174:8000';
+  // Production backend URL on Render
+  static const String baseUrl = 'https://bridgeit-backend.onrender.com';
 
   /// Get access token from shared preferences
   Future<String?> _getToken() async {
@@ -26,8 +26,8 @@ class ResumeApiService {
       var uri = Uri.parse('$baseUrl/api/resume/upload/');
       var request = http.MultipartRequest('POST', uri);
 
-      // Add authorization header
-      request.headers['Authorization'] = 'Bearer $token';
+      // Add authorization header (Token format for Gemini backend)
+      request.headers['Authorization'] = 'Token $token';
 
       // Add PDF file
       request.files.add(

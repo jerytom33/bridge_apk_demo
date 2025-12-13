@@ -14,10 +14,9 @@ class EducationLevelSelectionScreen extends StatelessWidget {
           style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Header
@@ -32,11 +31,11 @@ class EducationLevelSelectionScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'Select your current education status to take the appropriate aptitude test',
+              'Select your current education status to take a personalized AI-powered aptitude test',
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 40),
 
             // 10th Passed Option
             _buildEducationCard(
@@ -45,17 +44,9 @@ class EducationLevelSelectionScreen extends StatelessWidget {
               subtitle: 'SSLC / Secondary School Completed',
               icon: Icons.school,
               color: const Color(0xFF6C63FF),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        const AptitudeTestScreen(educationLevel: '10th'),
-                  ),
-                );
-              },
+              level: '10th',
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
             // 12th Passed Option
             _buildEducationCard(
@@ -64,15 +55,40 @@ class EducationLevelSelectionScreen extends StatelessWidget {
               subtitle: 'Higher Secondary / Pre-University Completed',
               icon: Icons.school_outlined,
               color: const Color(0xFF00BFA5),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        const AptitudeTestScreen(educationLevel: '12th'),
-                  ),
-                );
-              },
+              level: '12th',
+            ),
+            const SizedBox(height: 16),
+
+            // Diploma Option
+            _buildEducationCard(
+              context,
+              title: 'Diploma',
+              subtitle: 'Polytechnic / Vocational Training Completed',
+              icon: Icons.workspace_premium,
+              color: const Color(0xFFFF6B6B),
+              level: 'Diploma',
+            ),
+            const SizedBox(height: 16),
+
+            // Degree Option
+            _buildEducationCard(
+              context,
+              title: 'Degree',
+              subtitle: 'Bachelor\'s / Undergraduate Completed',
+              icon: Icons.school_rounded,
+              color: const Color(0xFFFFA726),
+              level: 'Degree',
+            ),
+            const SizedBox(height: 16),
+
+            // Masters Option
+            _buildEducationCard(
+              context,
+              title: 'Masters',
+              subtitle: 'Post-Graduate / Master\'s Completed',
+              icon: Icons.military_tech,
+              color: const Color(0xFF9C27B0),
+              level: 'Masters',
             ),
           ],
         ),
@@ -86,12 +102,19 @@ class EducationLevelSelectionScreen extends StatelessWidget {
     required String subtitle,
     required IconData icon,
     required Color color,
-    required VoidCallback onTap,
+    required String level,
   }) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AptitudeTestScreen(educationLevel: level),
+          ),
+        );
+      },
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -107,14 +130,14 @@ class EducationLevelSelectionScreen extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, size: 40, color: color),
+              child: Icon(icon, size: 32, color: color),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +145,7 @@ class EducationLevelSelectionScreen extends StatelessWidget {
                   Text(
                     title,
                     style: GoogleFonts.poppins(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
@@ -131,14 +154,14 @@ class EducationLevelSelectionScreen extends StatelessWidget {
                   Text(
                     subtitle,
                     style: GoogleFonts.poppins(
-                      fontSize: 14,
+                      fontSize: 13,
                       color: Colors.grey[600],
                     ),
                   ),
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios, color: color, size: 24),
+            Icon(Icons.arrow_forward_ios, color: color, size: 20),
           ],
         ),
       ),

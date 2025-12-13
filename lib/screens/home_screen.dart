@@ -7,6 +7,7 @@ import 'exams_screen.dart';
 import 'courses_screen.dart';
 import 'feed_screen.dart';
 import 'trending_courses_screen.dart';
+import 'profile_settings_screen.dart';
 import '../widgets/notification_badge.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -55,15 +56,25 @@ class HomeContent extends StatelessWidget {
                     ),
                   ),
                   const NotificationBadge(),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 4),
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: const Color(0xFF6C63FF),
-                      child: const Icon(
-                        Icons.person,
-                        color: Colors.white,
-                        size: 20,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileSettingsScreen(),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 4),
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: const Color(0xFF6C63FF),
+                        child: const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                       ),
                     ),
                   ),

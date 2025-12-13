@@ -92,6 +92,61 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
+  void handleNotificationTap(NotificationModel notification) async {
+    // Mark as read first
+    await markAsRead(notification.id);
+
+    // Navigate based on notification type
+    if (!mounted) return;
+
+    switch (notification.notificationType) {
+      case 'post_liked':
+      case 'post_saved':
+      case 'new_post':
+        // Navigate to feed screen
+        // If we have a specific post ID, we could navigate to that post
+        Navigator.pushNamed(context, '/feed');
+        break;
+
+      case 'new_course':
+      case 'course_enrolled':
+        // Navigate to courses screen or specific course
+        if (notification.relatedCourseId != null) {
+          // TODO: Navigate to specific course detail screen
+          // For now, navigate to courses screen
+          Navigator.pushNamed(context, '/courses');
+        } else {
+          Navigator.pushNamed(context, '/courses');
+        }
+        break;
+
+      case 'new_exam':
+      case 'exam_reminder':
+        // Navigate to exams screen or specific exam
+        if (notification.relatedExamId != null) {
+          // TODO: Navigate to specific exam detail screen
+          // For now, navigate to exams screen
+          Navigator.pushNamed(context, '/exams');
+        } else {
+          Navigator.pushNamed(context, '/exams');
+        }
+        break;
+
+      case 'guide_approved':
+      case 'guide_rejected':
+      case 'company_approved':
+      case 'company_rejected':
+      case 'guide_registration':
+      case 'company_registration':
+        // These are admin/system notifications, just stay on notifications screen
+        break;
+
+      default:
+        // For unknown types, stay on notifications screen
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +187,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   final notification = notifications[index];
                   return NotificationTile(
                     notification: notification,
-                    onTap: () => markAsRead(notification.id),
+                    onTap: () => handleNotificationTap(notification),
                   );
                 },
               ),

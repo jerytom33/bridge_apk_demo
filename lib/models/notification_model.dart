@@ -7,6 +7,8 @@ class NotificationModel {
   final int? relatedUserId;
   final String? relatedUserName;
   final int? relatedPostId;
+  final int? relatedCourseId;
+  final int? relatedExamId;
   final DateTime createdAt;
 
   NotificationModel({
@@ -18,6 +20,8 @@ class NotificationModel {
     this.relatedUserId,
     this.relatedUserName,
     this.relatedPostId,
+    this.relatedCourseId,
+    this.relatedExamId,
     required this.createdAt,
   });
 
@@ -31,6 +35,8 @@ class NotificationModel {
       relatedUserId: json['related_user'],
       relatedUserName: json['related_user_name'],
       relatedPostId: json['related_post_id'],
+      relatedCourseId: json['related_course_id'],
+      relatedExamId: json['related_exam_id'],
       createdAt: DateTime.parse(json['created_at']),
     );
   }
@@ -45,6 +51,8 @@ class NotificationModel {
       'related_user': relatedUserId,
       'related_user_name': relatedUserName,
       'related_post_id': relatedPostId,
+      'related_course_id': relatedCourseId,
+      'related_exam_id': relatedExamId,
       'created_at': createdAt.toIso8601String(),
     };
   }

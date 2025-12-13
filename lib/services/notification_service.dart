@@ -106,19 +106,68 @@ class NotificationService {
   void _handleMessage(RemoteMessage message) {
     print('Handling notification interaction: ${message.data}');
 
-    // Example: Navigate based on 'type' in data payload
+    // Extract data from notification payload
     final data = message.data;
-    if (data['type'] == 'feed_details') {
-      navigatorKey.currentState?.pushNamed(
-        '/feed',
-      ); // Could pass arguments if FeedScreen accepted them
-    } else if (data['type'] == 'course_details') {
-      navigatorKey.currentState?.pushNamed('/courses');
-    } else if (data['type'] == 'notification_screen') {
-      navigatorKey.currentState?.pushNamed('/notifications');
-    } else {
+    final String? type = data['type'];
+    final String? courseId = data['course_id'];
+    final String? examId = data['exam_id'];
+
+    // Navigate based on notification type
+    switch (type) {
+      // Feed/Post related notifications
+      case 'post_liked':
+      case 'post_saved':
+      case 'new_post':
+      case 'feed':
+        navigatorKey.currentState?.pushNamed('/feed');
+        break;
+
+      // Course related notifications
+      case 'new_course':
+      case 'course_enrolled':
+      case 'course':
+        if (courseId != null) {
+          // Navigate to specific course - passing arguments
+          navigatorKey.currentState?.pushNamed(
+            '/courses',
+            arguments: {'courseId': courseId},
+          );
+        } else {
+          navigatorKey.currentState?.pushNamed('/courses');
+        }
+        break;
+
+      // Exam related notifications
+      case 'new_exam':
+      case 'exam_reminder':
+      case 'exam':
+        if (examId != null) {
+          // Navigate to specific exam - passing arguments
+          navigatorKey.currentState?.pushNamed(
+            '/exams',
+            arguments: {'examId': examId},
+          );
+        } else {
+          navigatorKey.currentState?.pushNamed('/exams');
+        }
+        break;
+
+      // Notification screen notifications
+      case 'notification_screen':
+      case 'system':
+        navigatorKey.currentState?.pushNamed('/notifications');
+        break;
+
+      // Profile/Account notifications
+      case 'profile':
+      case 'account':
+        navigatorKey.currentState?.pushNamed('/profile');
+        break;
+
       // Default: Go to home
-      navigatorKey.currentState?.pushNamed('/home');
+      default:
+        navigatorKey.currentState?.pushNamed('/home');
+        break;
     }
   }
 

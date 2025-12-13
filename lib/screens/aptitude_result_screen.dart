@@ -9,16 +9,24 @@ class AptitudeResultScreen extends StatelessWidget {
   final int commerceScore;
   final int humanitiesScore;
   final String educationLevel;
+  final int? timeTaken;
+  final Map<String, String>? answers;
+  final List<Map<String, dynamic>>? questions;
+  final Map<String, dynamic>? aiAnalysis;
 
   const AptitudeResultScreen({
     super.key,
     required this.score,
-    required this.total,
+    int? totalQuestions, // Accept either total or totalQuestions
     this.scienceScore = 0,
     this.commerceScore = 0,
     this.humanitiesScore = 0,
     this.educationLevel = '10th',
-  });
+    this.timeTaken,
+    this.answers,
+    this.questions,
+    this.aiAnalysis,
+  }) : total = totalQuestions ?? 15;
 
   @override
   Widget build(BuildContext context) {

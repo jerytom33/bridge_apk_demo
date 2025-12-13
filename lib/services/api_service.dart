@@ -44,7 +44,9 @@ class ApiService {
     try {
       final response = await http
           .get(Uri.parse('$baseUrl/'))
-          .timeout(const Duration(seconds: 10));
+          .timeout(
+            const Duration(seconds: 30),
+          ); // Increased for Render cold start
       return response.statusCode == 200 ||
           response.statusCode ==
               404; // 404 means server reached but path not found, which is fine for connectivity check
@@ -223,7 +225,9 @@ class ApiService {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({'email': email, 'password': password}),
           )
-          .timeout(const Duration(seconds: 10));
+          .timeout(
+            const Duration(seconds: 30),
+          ); // Increased for Render cold start
 
       if (kDebugMode) {
         print('LOGIN → ${response.statusCode}');
@@ -298,6 +302,51 @@ class ApiService {
     }
   }
 
+  // Fetch full student profile (including education, stream, etc.)
+  static Future<Map<String, dynamic>> fetchStudentProfile() async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        return {'success': false, 'error': 'Not authenticated'};
+      }
+
+      print('fetching student profile from: $baseUrl/student/profile/');
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/student/profile/'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      print(
+        'Student profile response: ${response.statusCode} - ${response.body}',
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return {'success': true, 'data': data};
+      } else {
+        try {
+          final error = jsonDecode(response.body);
+          return {
+            'success': false,
+            'error':
+                error['detail'] ??
+                error['error'] ??
+                'Failed to fetch student profile',
+          };
+        } catch (_) {
+          return {
+            'success': false,
+            'error': 'Failed to fetch student profile (${response.statusCode})',
+          };
+        }
+      }
+    } catch (e) {
+      print('Error fetching student profile: $e');
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
+    }
+  }
+
   // Setup profile endpoint
 
   static Future<Map<String, dynamic>> updateStudentProfile(
@@ -309,26 +358,54 @@ class ApiService {
         return {'success': false, 'error': 'Not authenticated'};
       }
 
-      final response = await http.put(
-        Uri.parse('$baseUrl/student/profile/setup/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(profileData),
-      );
+      print('🔧 Updating profile at: $baseUrl/student/profile/');
+      print('📦 Data: $profileData');
 
-      if (response.statusCode == 200) {
+      final response = await http
+          .patch(
+            // Changed from PUT to PATCH
+            Uri.parse('$baseUrl/student/profile/'), // Simplified endpoint
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+            body: jsonEncode(profileData),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      print('📡 Response status: ${response.statusCode}');
+      print('📄 Response body: ${response.body}');
+
+      // Check if response is HTML (error page)
+      if (response.body.trim().startsWith('<') ||
+          response.body.trim().startsWith('<!')) {
+        return {
+          'success': false,
+          'error':
+              'Server error: Endpoint not found or misconfigured (${response.statusCode})',
+        };
+      }
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
         return {'success': true, 'data': data};
       } else {
-        final error = jsonDecode(response.body);
-        return {
-          'success': false,
-          'error': error['error'] ?? 'Profile update failed',
-        };
+        try {
+          final error = jsonDecode(response.body);
+          return {
+            'success': false,
+            'error':
+                error['error'] ?? error['detail'] ?? 'Profile update failed',
+          };
+        } catch (e) {
+          return {
+            'success': false,
+            'error': 'Server error: ${response.statusCode}',
+          };
+        }
       }
     } catch (e) {
+      print('❌ Exception in updateStudentProfile: $e');
       return {'success': false, 'error': 'Network error: ${e.toString()}'};
     }
   }
@@ -342,26 +419,56 @@ class ApiService {
         return {'success': false, 'error': 'Not authenticated'};
       }
 
-      final response = await http.put(
-        Uri.parse('$baseUrl/auth/profile/setup/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(profileData),
-      );
+      print('🔧 Profile setup endpoint: $baseUrl/student/profile/');
+      print('📦 Profile setup data: $profileData');
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return {'success': true, 'data': data};
-      } else {
-        final error = jsonDecode(response.body);
+      // Use PATCH to the same endpoint as profile update
+      final response = await http
+          .patch(
+            Uri.parse('$baseUrl/student/profile/'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+            body: jsonEncode(profileData),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      print('📡 Profile setup response status: ${response.statusCode}');
+      print('📄 Profile setup response body: ${response.body}');
+
+      // Check if response is HTML (error page)
+      if (response.body.trim().startsWith('<') ||
+          response.body.trim().startsWith('<!')) {
+        print('❌ Profile setup returned HTML error page');
         return {
           'success': false,
-          'error': error['error'] ?? 'Profile setup failed',
+          'error': 'Server error: Endpoint not found (${response.statusCode})',
         };
       }
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        print('✅ Profile setup successful');
+        return {'success': true, 'data': data};
+      } else {
+        try {
+          final error = jsonDecode(response.body);
+          print('❌ Profile setup failed: ${error['error'] ?? error['detail']}');
+          return {
+            'success': false,
+            'error':
+                error['error'] ?? error['detail'] ?? 'Profile setup failed',
+          };
+        } catch (e) {
+          return {
+            'success': false,
+            'error': 'Profile setup failed (Status: ${response.statusCode})',
+          };
+        }
+      }
     } catch (e) {
+      print('❌ Profile setup exception: $e');
       return {'success': false, 'error': 'Network error: ${e.toString()}'};
     }
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import 'home_screen.dart';
 
@@ -140,21 +141,47 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     });
 
     try {
-      // Prepare profile data to match API contract
+      // Prepare profile data to match backend API
       final profileData = {
+        'phone': _phoneController.text.trim(),
+        'gender': _selectedGender,
+        'dob': _selectedDate != null
+            ? "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}"
+            : '',
+        'state': _stateController.text.trim(),
+        'district': _districtController.text.trim(),
+        'place': _placeController.text.trim(),
         'current_level': _selectedEducationLevel,
         'stream': _streamController.text.trim(),
         'interests': _selectedInterests,
         'career_goals': _careerGoalsController.text.trim(),
-        'phone': _phoneController.text.trim(),
-        'date_of_birth': _selectedDate != null
-            ? "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}"
-            : '',
       };
 
-      final result = await ApiService.setupProfile(profileData);
+      print('📤 Submitting profile completion: $profileData');
+
+      // Use updateStudentProfile instead of setupProfile
+      final result = await ApiService.updateStudentProfile(profileData);
 
       if (result['success']) {
+        // Save to SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_phone', _phoneController.text.trim());
+        await prefs.setString('user_dob', profileData['dob'] as String);
+        await prefs.setString('user_gender', _selectedGender!);
+        await prefs.setString('user_state', _stateController.text.trim());
+        await prefs.setString('user_district', _districtController.text.trim());
+        await prefs.setString('user_place', _placeController.text.trim());
+        await prefs.setString('user_education_level', _selectedEducationLevel!);
+        await prefs.setString('user_stream', _streamController.text.trim());
+        await prefs.setString(
+          'user_career_goals',
+          _careerGoalsController.text.trim(),
+        );
+        await prefs.setString('user_interests', _selectedInterests.join(','));
+        await prefs.setBool('profile_completed', true);
+
+        print('✅ Profile completion successful');
+
         if (!mounted) return;
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
@@ -165,15 +192,14 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         );
 
         // Navigate to home screen
-        // Use pushAndRemoveUntil to clear the navigation stack
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
-          (route) => false, // Remove all previous routes
+          (route) => false,
         );
       } else {
+        print('❌ Profile completion failed: ${result['error']}');
         if (!mounted) return;
-        // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(result['error'] ?? 'Profile update failed'),
@@ -182,6 +208,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         );
       }
     } catch (e) {
+      print('❌ Error in profile completion: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

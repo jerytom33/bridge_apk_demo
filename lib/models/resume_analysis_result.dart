@@ -15,6 +15,17 @@ class ResumeAnalysisResult {
   final List<RecommendedCourse> recommendedCourses;
   final List<String> scoreBreakdown;
 
+  // MegaLLM AI Analysis Fields
+  final List<String> extractedSkills;
+  final List<String> technicalSkills;
+  final List<String> softSkills;
+  final List<String> careerPaths;
+  final List<String> strengths;
+  final List<String> improvements;
+  final String aiSummary;
+  final String experienceLevel;
+  final List<String> recommendedRoles;
+
   ResumeAnalysisResult({
     required this.id,
     required this.user,
@@ -31,6 +42,15 @@ class ResumeAnalysisResult {
     required this.recommendedSkills,
     required this.recommendedCourses,
     required this.scoreBreakdown,
+    this.extractedSkills = const [],
+    this.technicalSkills = const [],
+    this.softSkills = const [],
+    this.careerPaths = const [],
+    this.strengths = const [],
+    this.improvements = const [],
+    this.aiSummary = '',
+    this.experienceLevel = '',
+    this.recommendedRoles = const [],
   });
 
   factory ResumeAnalysisResult.fromJson(Map<String, dynamic> json) {
@@ -58,6 +78,15 @@ class ResumeAnalysisResult {
               .toList() ??
           [],
       scoreBreakdown: List<String>.from(json['score_breakdown'] ?? []),
+      extractedSkills: List<String>.from(json['extracted_skills'] ?? []),
+      technicalSkills: List<String>.from(json['technical_skills'] ?? []),
+      softSkills: List<String>.from(json['soft_skills'] ?? []),
+      careerPaths: List<String>.from(json['career_paths'] ?? []),
+      strengths: List<String>.from(json['strengths'] ?? []),
+      improvements: List<String>.from(json['improvements'] ?? []),
+      aiSummary: json['ai_summary'] as String? ?? '',
+      experienceLevel: json['experience_level'] as String? ?? '',
+      recommendedRoles: List<String>.from(json['recommended_roles'] ?? []),
     );
   }
 
@@ -78,6 +107,15 @@ class ResumeAnalysisResult {
       'recommended_skills': recommendedSkills,
       'recommended_courses': recommendedCourses.map((e) => e.toJson()).toList(),
       'score_breakdown': scoreBreakdown,
+      'extracted_skills': extractedSkills,
+      'technical_skills': technicalSkills,
+      'soft_skills': softSkills,
+      'career_paths': careerPaths,
+      'strengths': strengths,
+      'improvements': improvements,
+      'ai_summary': aiSummary,
+      'experience_level': experienceLevel,
+      'recommended_roles': recommendedRoles,
     };
   }
 }
@@ -164,6 +202,45 @@ class ResumeHistoryItem {
       predictedField: json['predicted_field'] as String? ?? '',
       resumeScore: json['resume_score'] as int? ?? 0,
       createdAt: DateTime.parse(json['created_at'] as String),
+    );
+  }
+}
+
+// MegaLLM AI Analysis Response
+class MegaLLMAIAnalysis {
+  final List<String> extractedSkills;
+  final List<String> technicalSkills;
+  final List<String> softSkills;
+  final List<String> careerPaths;
+  final List<String> strengths;
+  final List<String> improvements;
+  final String aiSummary;
+  final String experienceLevel;
+  final List<String> recommendedRoles;
+
+  MegaLLMAIAnalysis({
+    this.extractedSkills = const [],
+    this.technicalSkills = const [],
+    this.softSkills = const [],
+    this.careerPaths = const [],
+    this.strengths = const [],
+    this.improvements = const [],
+    this.aiSummary = '',
+    this.experienceLevel = '',
+    this.recommendedRoles = const [],
+  });
+
+  factory MegaLLMAIAnalysis.fromJson(Map<String, dynamic> json) {
+    return MegaLLMAIAnalysis(
+      extractedSkills: List<String>.from(json['extracted_skills'] ?? []),
+      technicalSkills: List<String>.from(json['technical_skills'] ?? []),
+      softSkills: List<String>.from(json['soft_skills'] ?? []),
+      careerPaths: List<String>.from(json['career_paths'] ?? []),
+      strengths: List<String>.from(json['strengths'] ?? []),
+      improvements: List<String>.from(json['improvements'] ?? []),
+      aiSummary: json['ai_summary'] as String? ?? '',
+      experienceLevel: json['experience_level'] as String? ?? '',
+      recommendedRoles: List<String>.from(json['recommended_roles'] ?? []),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import '../models/user.dart';
@@ -23,7 +24,28 @@ class AuthProvider with ChangeNotifier {
           final userData =
               profileResult['data']['user'] ?? profileResult['data'];
           if (userData != null) {
+            // Debug: Print raw user data from backend
+            print('🔍 Raw user data from backend: $userData');
+
             _user = User.fromJson(userData);
+
+            // Debug: Print parsed User object
+            print(
+              '🔍 Parsed User - name: ${_user?.name}, email: ${_user?.email}',
+            );
+
+            // Save to SharedPreferences for profile screen
+            final prefs = await SharedPreferences.getInstance();
+            final nameToSave = _user?.name ?? 'Student';
+            final emailToSave = _user?.email ?? email;
+
+            await prefs.setString('user_name', nameToSave);
+            await prefs.setString('user_email', emailToSave);
+
+            // Debug: Confirm what was saved
+            print(
+              '✅ Saved to SharedPreferences - name: $nameToSave, email: $emailToSave',
+            );
           }
         }
         _isAuthenticated = true;
@@ -62,6 +84,11 @@ class AuthProvider with ChangeNotifier {
               profileResult['data']['user'] ?? profileResult['data'];
           if (userData != null) {
             _user = User.fromJson(userData);
+
+            // Save to SharedPreferences for profile screen
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('user_name', _user?.name ?? name);
+            await prefs.setString('user_email', _user?.email ?? email);
           }
         }
         notifyListeners();
