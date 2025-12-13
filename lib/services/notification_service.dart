@@ -56,6 +56,10 @@ class NotificationService {
       // Handle background messages
       FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
 
+      // Subscribe to general topic
+      await _firebaseMessaging.subscribeToTopic('all_users');
+      print('Subscribed to all_users topic');
+
       // Setup interaction handling
       await setupInteractedMessage();
 

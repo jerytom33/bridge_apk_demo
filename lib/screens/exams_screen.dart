@@ -55,6 +55,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
           _exams = exams;
           _isLoading = false;
         });
+        _checkDeepLink();
       } else {
         setState(() => _isLoading = false);
         if (mounted) {
@@ -114,6 +115,211 @@ class _ExamsScreenState extends State<ExamsScreen> {
         });
       }
     }
+  }
+
+  int? _highlightedExamId;
+  bool _initialDeepLinkHandled = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialDeepLinkHandled) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is Map<String, dynamic> && args.containsKey('examId')) {
+        try {
+          _highlightedExamId = int.parse(args['examId'].toString());
+          print('🔗 Deep link received for Exam ID: $_highlightedExamId');
+        } catch (e) {
+          print('❌ Error parsing examId from arguments: $e');
+        }
+      }
+      _initialDeepLinkHandled = true;
+    }
+  }
+
+  void _checkDeepLink() {
+    if (_highlightedExamId != null && !_isLoading) {
+      try {
+        final exam = _exams.firstWhere((e) => e.id == _highlightedExamId);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            _showExamDetails(exam);
+            setState(() {
+              _highlightedExamId = null;
+            });
+          }
+        });
+      } catch (e) {
+        print('Could not find exam with ID $_highlightedExamId to highlight');
+      }
+    }
+  }
+
+  void _showExamDetails(Exam exam) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.8,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+          ),
+          child: SingleChildScrollView(
+            controller: scrollController,
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 50,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        exam.name,
+                        style: GoogleFonts.poppins(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        exam.isSaved ? Icons.bookmark : Icons.bookmark_border,
+                        color: Theme.of(context).primaryColor,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _toggleSave(exam.id);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    _buildTag(
+                      context,
+                      icon: Icons.school,
+                      label: exam.educationLevel,
+                      color: Colors.grey[700]!,
+                      bgColor: Colors.grey[200]!,
+                    ),
+                    const SizedBox(width: 12),
+                    _buildTag(
+                      context,
+                      icon: Icons.book,
+                      label: exam.subject,
+                      color: Theme.of(context).primaryColor,
+                      bgColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[50],
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue[100]!),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.calendar_today, color: Colors.blue[800]),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Exam Date',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              color: Colors.blue[800],
+                            ),
+                          ),
+                          Text(
+                            exam.date,
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue[900],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'Description',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  exam.description,
+                  style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    color: Colors.grey[700],
+                    height: 1.6,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Registration feature coming soon!'),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Register for Exam',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -203,7 +409,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                           return Card(
                             child: InkWell(
                               borderRadius: BorderRadius.circular(16),
-                              onTap: () {},
+                              onTap: () => _showExamDetails(exam),
                               child: Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Column(

@@ -54,6 +54,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
           _courses = courses;
           _isLoading = false;
         });
+        _checkDeepLink(); // Check if we need to open a specific course
       } else {
         setState(() {
           _isLoading = false;
@@ -126,6 +127,190 @@ class _CoursesScreenState extends State<CoursesScreen> {
     }
   }
 
+  int? _highlightedCourseId;
+  bool _initialDeepLinkHandled = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialDeepLinkHandled) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is Map<String, dynamic> && args.containsKey('courseId')) {
+        try {
+          _highlightedCourseId = int.parse(args['courseId'].toString());
+          print('🔗 Deep link received for Course ID: $_highlightedCourseId');
+        } catch (e) {
+          print('❌ Error parsing courseId from arguments: $e');
+        }
+      }
+      _initialDeepLinkHandled = true;
+    }
+  }
+
+  void _checkDeepLink() {
+    if (_highlightedCourseId != null && !_isLoading) {
+      try {
+        final course = _courses.firstWhere((c) => c.id == _highlightedCourseId);
+        // Slight delay to ensure UI is ready
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            _showCourseDetails(course);
+            // Reset to prevent re-opening on simple setStates
+            setState(() {
+              _highlightedCourseId = null;
+            });
+          }
+        });
+      } catch (e) {
+        print(
+          'Could not find course with ID $_highlightedCourseId to highlight',
+        );
+      }
+    }
+  }
+
+  void _showCourseDetails(Course course) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+          ),
+          child: SingleChildScrollView(
+            controller: scrollController,
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 50,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        course.title,
+                        style: GoogleFonts.poppins(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        course.isSaved ? Icons.bookmark : Icons.bookmark_border,
+                        color: Theme.of(context).primaryColor,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context); // Close sheet to update list
+                        _toggleSave(course.id);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'by ${course.provider}',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    _buildTag(
+                      context,
+                      icon: Icons.star,
+                      label: '${course.rating} Rating',
+                      color: Colors.amber[800]!,
+                      bgColor: Colors.amber[100]!,
+                    ),
+                    const SizedBox(width: 12),
+                    _buildTag(
+                      context,
+                      icon: Icons.access_time,
+                      label: course.duration,
+                      color: Colors.blue[800]!,
+                      bgColor: Colors.blue[100]!,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'About this course',
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  course.description.isNotEmpty
+                      ? course.description
+                      : 'No description available for this course.',
+                  style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    color: Colors.grey[700],
+                    height: 1.6,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Enrollment feature coming soon!'),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Enroll Now',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,9 +372,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
                             // Inherits CardTheme
                             child: InkWell(
                               borderRadius: BorderRadius.circular(16),
-                              onTap: () {
-                                // Navigate to details
-                              },
+                              onTap: () => _showCourseDetails(course),
                               child: Padding(
                                 padding: const EdgeInsets.all(20),
                                 child: Column(
