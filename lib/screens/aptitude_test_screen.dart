@@ -204,7 +204,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'This may take a few moments',
+              'This may take up to a minute...',
               style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[500]),
             ),
           ],

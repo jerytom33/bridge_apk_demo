@@ -50,41 +50,80 @@ class AptitudeAiService {
             },
           )
           .timeout(
-            const Duration(seconds: 30),
+            const Duration(seconds: 60), // Increased for AI question generation
             onTimeout: () {
               throw TimeoutException(
-                'Request timeout. Question generation is taking longer than expected.',
+                'Request timeout after 60 seconds. The backend is taking longer than expected to generate questions for $educationLevel level. Please try again.',
               );
             },
           );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final jsonData = json.decode(response.body);
+      debugPrint('API Response Status Code: ${response.statusCode}');
+      debugPrint('API Response Body Length: ${response.body.length}');
+      debugPrint(
+        'API Response Body (first 500 chars): ${response.body.substring(0, response.body.length > 500 ? 500 : response.body.length)}',
+      );
 
-        // Extract questions from the response (Gemini backend format)
-        final responseData = jsonData['data'];
-        if (responseData != null && responseData['questions'] != null) {
-          final List<dynamic> questionsData = responseData['questions'];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          final jsonData = json.decode(response.body);
+          debugPrint('JSON decoded successfully for $educationLevel level');
+
+          // Extract questions from the response (Gemini backend format)
+          final responseData = jsonData['data'];
+          if (responseData != null && responseData['questions'] != null) {
+            final List<dynamic> questionsData = responseData['questions'];
+            debugPrint(
+              'Successfully loaded ${questionsData.length} questions for $educationLevel level',
+            );
+            return questionsData.cast<Map<String, dynamic>>();
+          }
+          // Fallback for direct questions array
+          final List<dynamic> questionsData = jsonData['data'] ?? jsonData;
           debugPrint(
             'Successfully loaded ${questionsData.length} questions for $educationLevel level',
           );
           return questionsData.cast<Map<String, dynamic>>();
+        } on FormatException catch (e) {
+          debugPrint(
+            'FormatException while parsing response for $educationLevel: $e',
+          );
+          debugPrint('Response body: ${response.body}');
+          throw Exception(
+            'Invalid JSON response from server for $educationLevel level. Backend may be returning HTML or malformed data. Please contact support.',
+          );
         }
-        // Fallback for direct questions array
-        final List<dynamic> questionsData = jsonData['data'] ?? jsonData;
-        debugPrint(
-          'Successfully loaded ${questionsData.length} questions for $educationLevel level',
-        );
-        return questionsData.cast<Map<String, dynamic>>();
       } else if (response.statusCode == 401) {
         throw Exception('Authentication failed. Please login again.');
       } else if (response.statusCode == 500) {
-        final errorData = json.decode(response.body);
-        throw Exception(
-          errorData['error'] ??
-              'Failed to generate questions for $educationLevel level. Please try again.',
-        );
+        debugPrint('500 Server Error for $educationLevel level');
+        debugPrint('Response body: ${response.body}');
+
+        // Check if response is HTML (common for 500 errors)
+        if (response.body.trim().toLowerCase().startsWith('<html') ||
+            response.body.contains('Internal Server Error')) {
+          throw Exception(
+            'Backend server error for $educationLevel level. The backend may not be configured to handle this education level yet. Please contact support or try another level.',
+          );
+        }
+
+        // Try to parse JSON error message
+        try {
+          final errorData = json.decode(response.body);
+          throw Exception(
+            errorData['error'] ??
+                'Failed to generate questions for $educationLevel level. Please try again.',
+          );
+        } catch (e) {
+          debugPrint('Error parsing 500 response: ${response.body}');
+          throw Exception(
+            'Server error (500) for $educationLevel level. The backend encountered an issue. Please try again later or contact support.',
+          );
+        }
       } else {
+        debugPrint(
+          'Unexpected status code ${response.statusCode}: ${response.body}',
+        );
         throw Exception(
           'Failed to fetch questions for $educationLevel level: ${response.statusCode}',
         );
@@ -93,8 +132,6 @@ class AptitudeAiService {
       throw Exception(e.message ?? 'Request timeout. Please try again.');
     } on SocketException {
       throw Exception('No internet connection. Please check your network.');
-    } on FormatException {
-      throw Exception('Invalid response from server. Please try again.');
     } catch (e) {
       if (e is Exception) {
         rethrow;
