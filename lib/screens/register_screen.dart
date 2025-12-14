@@ -73,6 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (mounted) {
         // specific check
         final isConnected = await ApiService.verifyConnection();
+        if (!mounted) return;
         String errorMessage = 'Network Error: $e';
         if (!isConnected) {
           errorMessage =

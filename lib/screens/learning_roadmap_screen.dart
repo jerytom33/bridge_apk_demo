@@ -19,8 +19,9 @@ class RoadmapStep {
 
   double get progress {
     if (subtasks.isEmpty) return isCompleted ? 1.0 : 0.0;
-    final completedSubtasks =
-        subtasks.where((subtask) => subtask.startsWith('✓')).length;
+    final completedSubtasks = subtasks
+        .where((subtask) => subtask.startsWith('✓'))
+        .length;
     return completedSubtasks / subtasks.length;
   }
 }
@@ -29,7 +30,7 @@ class LearningRoadmapScreen extends StatefulWidget {
   const LearningRoadmapScreen({super.key});
 
   @override
-  _LearningRoadmapScreenState createState() => _LearningRoadmapScreenState();
+  State<LearningRoadmapScreen> createState() => _LearningRoadmapScreenState();
 }
 
 class _LearningRoadmapScreenState extends State<LearningRoadmapScreen> {
@@ -139,8 +140,9 @@ class _LearningRoadmapScreenState extends State<LearningRoadmapScreen> {
 
     // Save progress
     final prefs = await SharedPreferences.getInstance();
-    final savedProgress =
-        _roadmapSteps.map((s) => s.isCompleted.toString()).toList();
+    final savedProgress = _roadmapSteps
+        .map((s) => s.isCompleted.toString())
+        .toList();
     await prefs.setStringList('roadmap_progress', savedProgress);
 
     // Update overall progress in home screen
@@ -152,7 +154,8 @@ class _LearningRoadmapScreenState extends State<LearningRoadmapScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            step.isCompleted ? 'Step completed!' : 'Step marked as incomplete'),
+          step.isCompleted ? 'Step completed!' : 'Step marked as incomplete',
+        ),
         backgroundColor: step.isCompleted ? Colors.green : Colors.orange,
       ),
     );
@@ -160,8 +163,9 @@ class _LearningRoadmapScreenState extends State<LearningRoadmapScreen> {
 
   double get _overallProgress {
     if (_roadmapSteps.isEmpty) return 0.0;
-    final completedSteps =
-        _roadmapSteps.where((step) => step.isCompleted).length;
+    final completedSteps = _roadmapSteps
+        .where((step) => step.isCompleted)
+        .length;
     return completedSteps / _roadmapSteps.length;
   }
 
@@ -180,9 +184,7 @@ class _LearningRoadmapScreenState extends State<LearningRoadmapScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
                 // Overall Progress
@@ -220,10 +222,7 @@ class _LearningRoadmapScreenState extends State<LearningRoadmapScreen> {
                       const SizedBox(height: 8),
                       Text(
                         '${_roadmapSteps.where((s) => s.isCompleted).length} of ${_roadmapSteps.length} steps completed',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -284,11 +283,7 @@ class RoadmapStepCard extends StatelessWidget {
                   ),
                   child: Center(
                     child: step.isCompleted
-                        ? const Icon(
-                            Icons.check,
-                            color: Colors.white,
-                            size: 18,
-                          )
+                        ? const Icon(Icons.check, color: Colors.white, size: 18)
                         : Text(
                             stepNumber.toString(),
                             style: const TextStyle(
@@ -332,10 +327,7 @@ class RoadmapStepCard extends StatelessWidget {
             // Description
             Text(
               step.description,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 12),
 
@@ -343,36 +335,35 @@ class RoadmapStepCard extends StatelessWidget {
             if (step.subtasks.isNotEmpty) ...[
               const Text(
                 'Key Activities:',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 8),
-              ...step.subtasks.map((subtask) => Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Row(
-                      children: [
-                        Icon(
-                          step.isCompleted
-                              ? Icons.check_circle
-                              : Icons.radio_button_unchecked,
-                          size: 16,
-                          color: step.isCompleted ? Colors.green : Colors.grey,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            subtask,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: step.isCompleted ? Colors.grey : null,
-                            ),
+              ...step.subtasks.map(
+                (subtask) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    children: [
+                      Icon(
+                        step.isCompleted
+                            ? Icons.check_circle
+                            : Icons.radio_button_unchecked,
+                        size: 16,
+                        color: step.isCompleted ? Colors.green : Colors.grey,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          subtask,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: step.isCompleted ? Colors.grey : null,
                           ),
                         ),
-                      ],
-                    ),
-                  )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
 
             // Progress Bar

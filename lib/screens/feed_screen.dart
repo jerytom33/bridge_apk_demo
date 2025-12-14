@@ -31,7 +31,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
       if (result['success']) {
         final responseData = result['data'];
-        print('Feed API Response: $responseData'); // Debug log
+        // print('Feed API Response: $responseData'); // Debug log
 
         List<dynamic> listCallback = [];
         if (responseData is Map<String, dynamic>) {
@@ -61,7 +61,7 @@ class _FeedScreenState extends State<FeedScreen> {
         }
       }
     } catch (e) {
-      print('Error parsing feed: $e');
+      // print('Error loading feed: $e');
       setState(() => _isLoading = false);
     }
   }
@@ -213,7 +213,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                         decoration: BoxDecoration(
                                           color: Theme.of(
                                             context,
-                                          ).primaryColor.withOpacity(0.1),
+                                          ).primaryColor.withValues(alpha: 0.1),
                                           borderRadius: BorderRadius.circular(
                                             20,
                                           ),

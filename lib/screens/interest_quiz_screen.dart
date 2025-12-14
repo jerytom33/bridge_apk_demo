@@ -19,7 +19,7 @@ class InterestQuizScreen extends StatefulWidget {
   const InterestQuizScreen({super.key});
 
   @override
-  _InterestQuizScreenState createState() => _InterestQuizScreenState();
+  State<InterestQuizScreen> createState() => _InterestQuizScreenState();
 }
 
 class _InterestQuizScreenState extends State<InterestQuizScreen> {

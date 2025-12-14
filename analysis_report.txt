@@ -1,0 +1,155 @@
+﻿Analyzing bridge_apk_demo...                                    
+
+   info - 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre - lib\main.dart:58:11 - deprecated_member_use
+warning - The declaration '_$PostFromJson' isn't referenced - lib\models\post.g.dart:9:6 - unused_element
+   info - Don't invoke 'print' in production code - lib\providers\auth_provider.dart:28:13 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\auth_provider.dart:33:13 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\auth_provider.dart:46:13 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\feed_provider.dart:42:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\feed_provider.dart:70:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\feed_provider.dart:92:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:21:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:29:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:38:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:54:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:58:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:66:7 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_result_screen.dart:150:36 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_result_screen.dart:153:38 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_result_screen.dart:221:60 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_result_screen.dart:362:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_result_screen.dart:369:28 - deprecated_member_use
+   info - The private field _answers could be 'final' - lib\screens\aptitude_test_screen.dart:22:23 - prefer_final_fields
+   info - Don't invoke 'print' in production code - lib\screens\aptitude_test_screen.dart:110:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\aptitude_test_screen.dart:111:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\aptitude_test_screen.dart:112:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\aptitude_test_screen.dart:113:7 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_test_screen.dart:356:54 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_test_screen.dart:414:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_test_screen.dart:498:41 - deprecated_member_use
+   info - Invalid use of a private type in a public API - lib\screens\career_suggestions_screen.dart:10:3 - library_private_types_in_public_api
+   info - The private field _careers could be 'final' - lib\screens\career_suggestions_screen.dart:15:16 - prefer_final_fields
+   info - Invalid use of a private type in a public API - lib\screens\course_suggestions_screen.dart:10:3 - library_private_types_in_public_api
+   info - Use 'const' with the constructor to improve performance - lib\screens\course_suggestions_screen.dart:313:23 - prefer_const_constructors
+   info - Don't invoke 'print' in production code - lib\screens\courses_screen.dart:34:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\courses_screen.dart:69:7 - avoid_print
+warning - The value of the local variable 'newState' isn't used - lib\screens\courses_screen.dart:92:13 - unused_local_variable
+   info - Don't invoke 'print' in production code - lib\screens\courses_screen.dart:141:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\courses_screen.dart:143:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\courses_screen.dart:165:9 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\courses_screen.dart:449:58 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\education_level_selection_screen.dart:121:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\education_level_selection_screen.dart:124:28 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\education_level_selection_screen.dart:135:30 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\screens\exams_screen.dart:37:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\exams_screen.dart:68:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\exams_screen.dart:131:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\exams_screen.dart:133:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\exams_screen.dart:153:9 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\exams_screen.dart:234:63 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\exams_screen.dart:361:19 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\exams_screen.dart:425:60 - deprecated_member_use
+   info - Invalid use of a private type in a public API - lib\screens\explore_screen.dart:25:3 - library_private_types_in_public_api
+   info - Use 'const' with the constructor to improve performance - lib\screens\explore_screen.dart:333:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\explore_screen.dart:335:22 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\screens\explore_screen.dart:336:27 - prefer_const_literals_to_create_immutables
+   info - Don't invoke 'print' in production code - lib\screens\feed_screen.dart:34:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\feed_screen.dart:64:7 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\feed_screen.dart:216:58 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\screens\home_screen.dart:68:28 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\home_screen.dart:70:30 - prefer_const_constructors
+   info - Invalid use of a private type in a public API - lib\screens\interest_quiz_screen.dart:22:3 - library_private_types_in_public_api
+   info - Invalid use of a private type in a public API - lib\screens\learning_roadmap_screen.dart:32:3 - library_private_types_in_public_api
+   info - Don't use 'BuildContext's across async gaps - lib\screens\login_screen.dart:69:30 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\screens\login_screen.dart:86:30 - use_build_context_synchronously
+   info - Parameter 'key' could be a super parameter - lib\screens\notifications_screen.dart:7:9 - use_super_parameters
+   info - Parameter 'key' could be a super parameter - lib\screens\notifications_screen.dart:203:9 - use_super_parameters
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\notifications_screen.dart:236:59 - deprecated_member_use
+   info - The private field _selectedInterests could be 'final' - lib\screens\onboarding_screen.dart:21:16 - prefer_final_fields
+   info - Use 'const' with the constructor to improve performance - lib\screens\onboarding_screen.dart:266:27 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\onboarding_screen.dart:303:11 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\screens\onboarding_screen.dart:325:27 - prefer_const_constructors
+   info - Invalid use of a private type in a public API - lib\screens\profile_completion_screen.dart:11:3 - library_private_types_in_public_api
+   info - The private field _selectedInterests could be 'final' - lib\screens\profile_completion_screen.dart:27:16 - prefer_final_fields
+   info - Don't invoke 'print' in production code - lib\screens\profile_completion_screen.dart:160:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_completion_screen.dart:183:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_completion_screen.dart:201:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_completion_screen.dart:211:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_screen.dart:63:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_screen.dart:170:13 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_screen.dart:173:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_screen.dart:189:7 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\profile_screen.dart:259:53 - deprecated_member_use
+   info - Invalid use of a private type in a public API - lib\screens\profile_settings_screen.dart:12:3 - library_private_types_in_public_api
+   info - Don't invoke 'print' in production code - lib\screens\profile_settings_screen.dart:68:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_settings_screen.dart:155:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_settings_screen.dart:158:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_settings_screen.dart:162:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_settings_screen.dart:219:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_settings_screen.dart:243:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_settings_screen.dart:256:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_settings_screen.dart:266:7 - avoid_print
+   info - Don't use 'BuildContext's across async gaps - lib\screens\register_screen.dart:82:30 - use_build_context_synchronously
+   info - Use 'const' with the constructor to improve performance - lib\screens\register_screen.dart:313:23 - prefer_const_constructors
+   info - Invalid use of a private type in a public API - lib\screens\resume_analyzer_screen.dart:10:3 - library_private_types_in_public_api
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:219:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:220:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:222:24 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\screens\resume_analyzer_screen.dart:224:29 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:348:40 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:373:40 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:398:40 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_result_screen.dart:191:17 - prefer_const_constructors
+   info - Unnecessary use of 'toList' in a spread - lib\screens\resume_result_screen.dart:407:16 - unnecessary_to_list_in_spreads
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_result_screen.dart:476:17 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\resume_result_screen.dart:500:58 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\resume_result_screen.dart:503:60 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_result_screen.dart:518:29 - prefer_const_constructors
+   info - Unnecessary use of 'toList' in a spread - lib\screens\resume_result_screen.dart:529:18 - unnecessary_to_list_in_spreads
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_upload_screen.dart:183:27 - prefer_const_constructors
+   info - Invalid use of a private type in a public API - lib\screens\saved_items_screen.dart:11:3 - library_private_types_in_public_api
+   info - Use 'const' with the constructor to improve performance - lib\screens\saved_items_screen.dart:441:23 - prefer_const_constructors
+   info - Invalid use of a private type in a public API - lib\screens\signup_screen.dart:9:3 - library_private_types_in_public_api
+   info - Don't use 'BuildContext's across async gaps - lib\screens\splash_screen.dart:28:52 - use_build_context_synchronously
+   info - Use 'const' with the constructor to improve performance - lib\screens\splash_screen.dart:63:22 - prefer_const_constructors
+   info - Invalid use of a private type in a public API - lib\screens\trending_courses_screen.dart:9:3 - library_private_types_in_public_api
+   info - Use 'const' with the constructor to improve performance - lib\screens\trending_courses_screen.dart:294:17 - prefer_const_constructors
+   info - Invalid use of a private type in a public API - lib\screens\upcoming_exams_screen.dart:9:3 - library_private_types_in_public_api
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:313:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:320:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:345:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:361:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:362:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:376:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:377:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:408:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:422:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:423:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:437:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:438:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:443:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:452:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:457:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\api_service.dart:471:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:14:3 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:42:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:47:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:53:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:61:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:68:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:69:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:72:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:77:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:84:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:91:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:111:5 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:198:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:200:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:203:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\resume_api_service.dart:57:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\resume_api_service.dart:58:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\resume_api_service.dart:59:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\services\resume_api_service.dart:60:9 - avoid_print
+   info - Parameter 'key' could be a super parameter - lib\widgets\notification_badge.dart:7:9 - use_super_parameters
+   info - Don't invoke 'print' in production code - lib\widgets\notification_badge.dart:30:7 - avoid_print
+

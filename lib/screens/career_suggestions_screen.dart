@@ -7,12 +7,12 @@ class CareerSuggestionsScreen extends StatefulWidget {
   const CareerSuggestionsScreen({super.key});
 
   @override
-  _CareerSuggestionsScreenState createState() =>
+  State<CareerSuggestionsScreen> createState() =>
       _CareerSuggestionsScreenState();
 }
 
 class _CareerSuggestionsScreenState extends State<CareerSuggestionsScreen> {
-  List<Career> _careers = [];
+  final List<Career> _careers = [];
   bool _isLoading = true;
   String _searchQuery = '';
 

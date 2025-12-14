@@ -188,7 +188,7 @@ class ResumeResultScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.person, color: const Color(0xFF6C63FF), size: 24),
+                const Icon(Icons.person, color: Color(0xFF6C63FF), size: 24),
                 const SizedBox(width: 10),
                 Text(
                   'Contact Details',
@@ -404,7 +404,7 @@ class ResumeResultScreen extends StatelessWidget {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -473,7 +473,7 @@ class ResumeResultScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.school, color: const Color(0xFF6C63FF), size: 24),
+                const Icon(Icons.school, color: Color(0xFF6C63FF), size: 24),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
@@ -497,10 +497,12 @@ class ResumeResultScreen extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF6C63FF).withOpacity(0.1),
+                          color: const Color(0xFF6C63FF).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: const Color(0xFF6C63FF).withOpacity(0.3),
+                            color: const Color(
+                              0xFF6C63FF,
+                            ).withValues(alpha: 0.3),
                           ),
                         ),
                         child: Row(
@@ -515,9 +517,9 @@ class ResumeResultScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Icon(
+                            const Icon(
                               Icons.open_in_new,
-                              color: const Color(0xFF6C63FF),
+                              color: Color(0xFF6C63FF),
                               size: 20,
                             ),
                           ],

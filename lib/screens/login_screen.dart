@@ -59,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (errorMsg.contains('timeout') ||
             errorMsg.contains('Network error')) {
           final isConnected = await ApiService.verifyConnection();
+          if (!mounted) return;
           if (!isConnected) {
             errorMsg =
                 'Cannot reach server at ${ApiService.baseUrl}.\n'
@@ -78,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         // specific check
         final isConnected = await ApiService.verifyConnection();
+        if (!mounted) return;
         String errorMessage = 'Network Error: $e';
         if (!isConnected) {
           errorMessage = 'Cannot connect to server. Check IP in ApiService.';

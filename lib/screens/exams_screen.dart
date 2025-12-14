@@ -34,7 +34,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
       if (result['success']) {
         final responseData = result['data'];
-        print('Exams API Response: $responseData'); // Debug log
+        // print('Exams API Response: $responseData'); // Debug log
 
         List<dynamic> listCallback = [];
         if (responseData is Map<String, dynamic>) {
@@ -65,7 +65,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
         }
       }
     } catch (e) {
-      print('Error parsing exams: $e'); // Debug log
+      // print('Error parsing exams: $e'); // Debug log
       setState(() => _isLoading = false);
     }
   }
@@ -128,9 +128,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
       if (args is Map<String, dynamic> && args.containsKey('examId')) {
         try {
           _highlightedExamId = int.parse(args['examId'].toString());
-          print('🔗 Deep link received for Exam ID: $_highlightedExamId');
+          // print('🔗 Deep link received for Exam ID: $_highlightedExamId');
         } catch (e) {
-          print('❌ Error parsing examId from arguments: $e');
+          // print('❌ Error parsing examId from arguments: $e');
         }
       }
       _initialDeepLinkHandled = true;
@@ -150,7 +150,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
           }
         });
       } catch (e) {
-        print('Could not find exam with ID $_highlightedExamId to highlight');
+        // print('Could not find exam with ID $_highlightedExamId to highlight');
       }
     }
   }
@@ -231,7 +231,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
                       icon: Icons.book,
                       label: exam.subject,
                       color: Theme.of(context).primaryColor,
-                      bgColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                      bgColor: Theme.of(
+                        context,
+                      ).primaryColor.withValues(alpha: 0.1),
                     ),
                   ],
                 ),
@@ -358,7 +360,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                 const SizedBox(height: 20),
                 // Filter Dropdown
                 DropdownButtonFormField<String>(
-                  value: _selectedLevel,
+                  initialValue: _selectedLevel,
                   decoration: InputDecoration(
                     labelText: 'Filter by Level',
                     prefixIcon: Icon(
@@ -420,9 +422,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
                                         Container(
                                           padding: const EdgeInsets.all(10),
                                           decoration: BoxDecoration(
-                                            color: Theme.of(
-                                              context,
-                                            ).primaryColor.withOpacity(0.1),
+                                            color: Theme.of(context)
+                                                .primaryColor
+                                                .withValues(alpha: 0.1),
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),

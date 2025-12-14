@@ -7,7 +7,7 @@ class CourseSuggestionsScreen extends StatefulWidget {
   const CourseSuggestionsScreen({super.key});
 
   @override
-  _CourseSuggestionsScreenState createState() =>
+  State<CourseSuggestionsScreen> createState() =>
       _CourseSuggestionsScreenState();
 }
 
@@ -190,7 +190,11 @@ class _CourseSuggestionsScreenState extends State<CourseSuggestionsScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.school, size: 64, color: Colors.grey[400]),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey[400],
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           _searchQuery.isEmpty && _selectedLevel == 'All'
@@ -310,7 +314,7 @@ class CourseCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.schedule, size: 14, color: Colors.blue),
+                      const Icon(Icons.schedule, size: 14, color: Colors.blue),
                       const SizedBox(width: 4),
                       Text(
                         course.duration,

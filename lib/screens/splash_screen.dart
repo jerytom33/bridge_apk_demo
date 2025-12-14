@@ -22,26 +22,28 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _checkAuthStatus() async {
     // Add a delay to show the splash screen
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 3), () async {
+      if (!mounted) return;
 
-    // Check authentication status
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await authProvider.autoLogin();
+      // Check authentication status
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.autoLogin();
 
-    // Navigate based on authentication status
-    if (mounted) {
-      if (authProvider.isAuthenticated) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainWrapper()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-        );
+      // Navigate based on authentication status
+      if (mounted) {
+        if (authProvider.isAuthenticated) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainWrapper()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
+        }
       }
-    }
+    });
   }
 
   @override
@@ -66,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: const Color(0xFF6C63FF),
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             // App name
             Text(
               'Bridge It',
@@ -80,17 +82,11 @@ class _SplashScreenState extends State<SplashScreen> {
             // Tagline
             Text(
               'Connecting Students to Their Future',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.white70,
-              ),
+              style: GoogleFonts.poppins(fontSize: 16, color: Colors.white70),
             ),
             const SizedBox(height: 50),
             // Loading spinner
-            const SpinKitFadingCircle(
-              color: Colors.white,
-              size: 50.0,
-            ),
+            const SpinKitFadingCircle(color: Colors.white, size: 50.0),
           ],
         ),
       ),

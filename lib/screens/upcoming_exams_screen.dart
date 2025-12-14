@@ -6,7 +6,7 @@ class UpcomingExamsScreen extends StatefulWidget {
   const UpcomingExamsScreen({super.key});
 
   @override
-  _UpcomingExamsScreenState createState() => _UpcomingExamsScreenState();
+  State<UpcomingExamsScreen> createState() => _UpcomingExamsScreenState();
 }
 
 class _UpcomingExamsScreenState extends State<UpcomingExamsScreen> {

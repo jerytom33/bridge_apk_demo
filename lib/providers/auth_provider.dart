@@ -25,14 +25,10 @@ class AuthProvider with ChangeNotifier {
               profileResult['data']['user'] ?? profileResult['data'];
           if (userData != null) {
             // Debug: Print raw user data from backend
-            print('🔍 Raw user data from backend: $userData');
 
             _user = User.fromJson(userData);
 
             // Debug: Print parsed User object
-            print(
-              '🔍 Parsed User - name: ${_user?.name}, email: ${_user?.email}',
-            );
 
             // Save to SharedPreferences for profile screen
             final prefs = await SharedPreferences.getInstance();
@@ -43,9 +39,6 @@ class AuthProvider with ChangeNotifier {
             await prefs.setString('user_email', emailToSave);
 
             // Debug: Confirm what was saved
-            print(
-              '✅ Saved to SharedPreferences - name: $nameToSave, email: $emailToSave',
-            );
           }
         }
         _isAuthenticated = true;

@@ -31,7 +31,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
 
       if (result['success']) {
         final responseData = result['data'];
-        print('Courses API Response: $responseData'); // Debug log
+        // print('Courses API Response: $responseData'); // Debug log
 
         List<dynamic> listCallback = [];
         if (responseData is Map<String, dynamic>) {
@@ -66,7 +66,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
         }
       }
     } catch (e) {
-      print('Error parsing courses: $e'); // Debug log
+      // print('Error loading courses: $e'); // Debug log
       setState(() {
         _isLoading = false;
       });
@@ -89,8 +89,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     });
 
     try {
-      final newState = !_courses[courseIndex]
-          .isSaved; // This logic is tricky with the setState above.
+      // This logic is tricky with the setState above.
       // Let's rely on the original state:
       // If original 'course.isSaved' was true, we want to unsave (target state false).
       // If original 'course.isSaved' was false, we want to save (target state true).
@@ -138,9 +137,9 @@ class _CoursesScreenState extends State<CoursesScreen> {
       if (args is Map<String, dynamic> && args.containsKey('courseId')) {
         try {
           _highlightedCourseId = int.parse(args['courseId'].toString());
-          print('🔗 Deep link received for Course ID: $_highlightedCourseId');
+          // print('🔗 Deep link received for Course ID: $_highlightedCourseId');
         } catch (e) {
-          print('❌ Error parsing courseId from arguments: $e');
+          // print('❌ Error parsing courseId from arguments: $e');
         }
       }
       _initialDeepLinkHandled = true;
@@ -162,9 +161,9 @@ class _CoursesScreenState extends State<CoursesScreen> {
           }
         });
       } catch (e) {
-        print(
-          'Could not find course with ID $_highlightedCourseId to highlight',
-        );
+        // print(
+        //   'Could not find course with ID $_highlightedCourseId to highlight',
+        // );
       }
     }
   }
@@ -368,6 +367,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
                             const SizedBox(height: 16),
                         itemBuilder: (context, index) {
                           final course = _courses[index];
+                          // print('Highlighting course: ${course.title}');
                           return Card(
                             // Inherits CardTheme
                             child: InkWell(
@@ -446,7 +446,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                           color: Theme.of(context).primaryColor,
                                           bgColor: Theme.of(
                                             context,
-                                          ).primaryColor.withOpacity(0.1),
+                                          ).primaryColor.withValues(alpha: 0.1),
                                         ),
                                         _buildTag(
                                           context,

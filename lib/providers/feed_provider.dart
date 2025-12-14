@@ -39,7 +39,6 @@ class FeedProvider with ChangeNotifier {
       }
     } catch (e) {
       _error = 'Load failed: $e';
-      print('Error loading posts: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -67,7 +66,7 @@ class FeedProvider with ChangeNotifier {
       }
     } catch (e) {
       _error = 'Like failed: $e';
-      print('Error toggling like: $e');
+      // print('Error toggling like: $e');
     }
   }
 
@@ -89,7 +88,7 @@ class FeedProvider with ChangeNotifier {
       }
     } catch (e) {
       _error = 'Save failed: $e';
-      print('Error toggling save: $e');
+      // print('Error toggling save: $e');
     }
   }
 

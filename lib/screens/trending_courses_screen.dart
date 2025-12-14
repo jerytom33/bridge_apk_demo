@@ -6,7 +6,7 @@ class TrendingCoursesScreen extends StatefulWidget {
   const TrendingCoursesScreen({super.key});
 
   @override
-  _TrendingCoursesScreenState createState() => _TrendingCoursesScreenState();
+  State<TrendingCoursesScreen> createState() => _TrendingCoursesScreenState();
 }
 
 class _TrendingCoursesScreenState extends State<TrendingCoursesScreen> {
@@ -187,7 +187,11 @@ class _TrendingCoursesScreenState extends State<TrendingCoursesScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.school, size: 64, color: Colors.grey[400]),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey[400],
+                        ),
                         const SizedBox(height: 16),
                         const Text(
                           'No courses found',
@@ -315,7 +319,7 @@ class _CourseCard extends StatelessWidget {
                 // Duration
                 Row(
                   children: [
-                    const Icon(Icons.schedule, size: 16, color: Colors.grey),
+                    Icon(Icons.schedule, size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
                     Text(course.duration, style: const TextStyle(fontSize: 14)),
                   ],

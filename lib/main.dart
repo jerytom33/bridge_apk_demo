@@ -54,8 +54,7 @@ class BridgeApp extends StatelessWidget {
           seedColor: const Color(0xFF6C63FF),
           primary: const Color(0xFF6C63FF),
           secondary: const Color(0xFFFF6B6B),
-          surface: Colors.white,
-          background: const Color(0xFFF5F7FA), // Soft background color
+          surface: const Color(0xFFF5F6FA), // Soft background color
         ),
         scaffoldBackgroundColor: const Color(0xFFF5F7FA),
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),

@@ -53,12 +53,6 @@ class ResumeApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonData = json.decode(response.body);
 
-        // Debug: Print the response to see what we're getting
-        print('=== RESUME API RESPONSE ===');
-        print('Status: ${response.statusCode}');
-        print('Response: ${response.body}');
-        print('===========================');
-
         return ResumeAnalysisResult.fromJson(jsonData);
       } else if (response.statusCode == 400) {
         // Handle bad request

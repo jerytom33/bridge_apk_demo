@@ -7,7 +7,7 @@ class ResumeAnalyzerScreen extends StatefulWidget {
   const ResumeAnalyzerScreen({super.key});
 
   @override
-  _ResumeAnalyzerScreenState createState() => _ResumeAnalyzerScreenState();
+  State<ResumeAnalyzerScreen> createState() => _ResumeAnalyzerScreenState();
 }
 
 class _ResumeAnalyzerScreenState extends State<ResumeAnalyzerScreen> {
@@ -206,10 +206,7 @@ class _ResumeAnalyzerScreenState extends State<ResumeAnalyzerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Resume Analyzer'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Resume Analyzer'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -248,11 +245,7 @@ class _ResumeAnalyzerScreenState extends State<ResumeAnalyzerScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.cloud_upload,
-                      size: 64,
-                      color: Colors.grey[400],
-                    ),
+                    Icon(Icons.cloud_upload, size: 64, color: Colors.grey[400]),
                     const SizedBox(height: 16),
                     Text(
                       _selectedFile != null
@@ -271,7 +264,7 @@ class _ResumeAnalyzerScreenState extends State<ResumeAnalyzerScreen> {
                     ElevatedButton.icon(
                       onPressed: _isAnalyzing ? null : _analyzeResume,
                       icon: _isAnalyzing
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 16,
                               height: 16,
                               child: CircularProgressIndicator(
@@ -281,7 +274,8 @@ class _ResumeAnalyzerScreenState extends State<ResumeAnalyzerScreen> {
                             )
                           : const Icon(Icons.analytics),
                       label: Text(
-                          _isAnalyzing ? 'Analyzing...' : 'Analyze Resume'),
+                        _isAnalyzing ? 'Analyzing...' : 'Analyze Resume',
+                      ),
                     ),
                   ],
                 ),
@@ -322,8 +316,9 @@ class _ResumeAnalyzerScreenState extends State<ResumeAnalyzerScreen> {
                           children: _extractedSkills.map((skill) {
                             return Chip(
                               label: Text(skill),
-                              backgroundColor:
-                                  Colors.blue.withValues(alpha: 0.1),
+                              backgroundColor: Colors.blue.withValues(
+                                alpha: 0.1,
+                              ),
                               labelStyle: const TextStyle(color: Colors.blue),
                             );
                           }).toList(),
@@ -345,10 +340,7 @@ class _ResumeAnalyzerScreenState extends State<ResumeAnalyzerScreen> {
                           itemCount: _careerPaths.length,
                           itemBuilder: (context, index) {
                             return ListTile(
-                              leading: Icon(
-                                Icons.work,
-                                color: Colors.green,
-                              ),
+                              leading: Icon(Icons.work, color: Colors.green),
                               title: Text(_careerPaths[index]),
                             );
                           },
@@ -412,7 +404,8 @@ class _ResumeAnalyzerScreenState extends State<ResumeAnalyzerScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
-                                      'Career suggestions feature coming soon!'),
+                                    'Career suggestions feature coming soon!',
+                                  ),
                                 ),
                               );
                             },

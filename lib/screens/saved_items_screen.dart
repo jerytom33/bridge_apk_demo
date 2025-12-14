@@ -8,7 +8,7 @@ class SavedItemsScreen extends StatefulWidget {
   const SavedItemsScreen({super.key});
 
   @override
-  _SavedItemsScreenState createState() => _SavedItemsScreenState();
+  State<SavedItemsScreen> createState() => _SavedItemsScreenState();
 }
 
 class _SavedItemsScreenState extends State<SavedItemsScreen>
@@ -438,7 +438,11 @@ class SavedCourseCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.schedule, size: 14, color: Colors.blue),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         course.duration,

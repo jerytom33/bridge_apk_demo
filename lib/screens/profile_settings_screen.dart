@@ -9,7 +9,7 @@ class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({super.key});
 
   @override
-  _ProfileSettingsScreenState createState() => _ProfileSettingsScreenState();
+  State<ProfileSettingsScreen> createState() => _ProfileSettingsScreenState();
 }
 
 class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
@@ -65,7 +65,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
       if (profileResult['success']) {
         final data = profileResult['data'];
-        print('📥 Student Profile data loaded: $data');
+        // print('📥 Student Profile data loaded: $data');
 
         // Check if data has top-level fields or nested user object
         // The /student/profile/ endpoint typically returns the student profile fields
@@ -153,13 +153,14 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         await prefs.setString('user_place', _placeController.text);
 
         print('✅ Profile data loaded and cached');
+        // print('✅ Profile data loaded and cached');
       } else {
         // Backend failed, fallback to SharedPreferences
-        print('⚠️ Backend fetch failed: ${profileResult['error']}');
+        // print('⚠️ Backend fetch failed: ${profileResult['error']}');
         await _loadFromSharedPreferences();
       }
     } catch (e) {
-      print('❌ Error fetching profile: $e');
+      // print('❌ Error fetching profile: $e');
       // Network error, fallback to SharedPreferences
       await _loadFromSharedPreferences();
     } finally {
@@ -216,7 +217,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         'place': _placeController.text.trim(),
       };
 
-      print('📤 Updating profile with data: $profileData');
+      // print('📤 Updating profile with data: $profileData');
 
       final result = await ApiService.updateStudentProfile(profileData);
 
@@ -240,7 +241,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           _isEditing = false;
         });
 
-        print('✅ Profile updated successfully in database and cache');
+        // print('✅ Profile updated successfully in database and cache');
 
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -253,7 +254,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         // Reload data to ensure UI is in sync with backend
         await _loadUserData();
       } else {
-        print('❌ Profile update failed: ${result['error']}');
+        // print('❌ Profile update failed: ${result['error']}');
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -263,7 +264,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         );
       }
     } catch (e) {
-      print('❌ Error updating profile: $e');
+      // print('❌ Error updating profile: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

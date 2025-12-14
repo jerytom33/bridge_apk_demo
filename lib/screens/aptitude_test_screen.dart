@@ -19,8 +19,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
 
   List<Map<String, dynamic>> _questions = [];
   int _currentQuestionIndex = 0;
-  Map<String, String> _answers =
-      {}; // Changed to String for letter answers (A, B, C, D)
+  final Map<int, int> _answers = {};
 
   bool _isLoading = true;
   bool _isSubmitting = false;
@@ -60,9 +59,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
 
   void _selectAnswer(int optionIndex) {
     setState(() {
-      // Convert index to letter (0 -> A, 1 -> B, etc.)
-      final letter = _apiService.indexToLetter(optionIndex);
-      _answers[_currentQuestionIndex.toString()] = letter;
+      _answers[_currentQuestionIndex] = optionIndex;
     });
   }
 
@@ -102,15 +99,20 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
     });
 
     try {
-      final result = await _apiService.analyzeResults(
-        questions: _questions,
-        answers: _answers,
+      // Convert _answers (Map<int, int>) to Map<String, String> for API
+      final Map<String, String> apiAnswers = _answers.map(
+        (key, value) =>
+            MapEntry(key.toString(), _apiService.indexToLetter(value)),
       );
 
-      print('=== DEBUG APTITUDE RESULT ===');
-      print(result);
-      print('KEYS: ${result.keys.toList()}');
-      print('=============================');
+      final result = await _apiService.analyzeResults(
+        questions: _questions,
+        answers: apiAnswers,
+      );
+
+      // print('=== DEBUG APTITUDE RESULT ===');
+      // print(result);
+      // print('=============================');
 
       final timeTaken = DateTime.now().difference(_startTime).inSeconds;
 
@@ -126,7 +128,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
             categoryBreakdown: Map<String, dynamic>.from(
               result['category_breakdown'] ?? {},
             ),
-            answers: _answers,
+            answers: apiAnswers, // Pass the converted answers
             questions: _questions,
             aiAnalysis: result['ai_analysis'],
           ),
@@ -305,10 +307,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
 
   Widget _buildTestScreen() {
     final currentQuestion = _questions[_currentQuestionIndex];
-    final selectedAnswerIndex =
-        _answers[_currentQuestionIndex.toString()] != null
-        ? _apiService.letterToIndex(_answers[_currentQuestionIndex.toString()]!)
-        : null;
+    final selectedAnswerIndex = _answers[_currentQuestionIndex];
 
     return Scaffold(
       appBar: AppBar(
@@ -353,7 +352,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF6C63FF).withOpacity(0.1),
+                      color: const Color(0xFF6C63FF).withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
@@ -411,7 +410,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -2),
                 ),
@@ -495,11 +494,13 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF6C63FF).withOpacity(0.1)
+              ? const Color(0xFF6C63FF).withValues(alpha: 0.1)
               : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? const Color(0xFF6C63FF) : Colors.grey[300]!,
+            color: isSelected
+                ? const Color(0xFF6C63FF)
+                : Colors.grey.withValues(alpha: 0.1),
             width: 2,
           ),
         ),

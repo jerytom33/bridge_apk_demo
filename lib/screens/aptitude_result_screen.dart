@@ -147,10 +147,10 @@ class AptitudeResultScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: streamColor.withOpacity(0.1),
+                color: streamColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: streamColor.withOpacity(0.3),
+                  color: streamColor.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
@@ -218,7 +218,9 @@ class AptitudeResultScreen extends StatelessWidget {
                       color: const Color(0xFF6C63FF),
                     ),
                   ),
-                  backgroundColor: const Color(0xFF6C63FF).withOpacity(0.1),
+                  backgroundColor: const Color(
+                    0xFF6C63FF,
+                  ).withValues(alpha: 0.1),
                   side: BorderSide.none,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -359,14 +361,14 @@ class AptitudeResultScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color: color, size: 28),

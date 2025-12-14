@@ -1,0 +1,66 @@
+﻿Analyzing bridge_apk_demo...                                    
+
+warning - The declaration '_$PostFromJson' isn't referenced - lib\models\post.g.dart:9:6 - unused_element
+   info - Don't invoke 'print' in production code - lib\providers\feed_provider.dart:69:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\feed_provider.dart:91:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:21:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:29:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:38:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:54:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:58:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\providers\profile_provider.dart:66:7 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_result_screen.dart:221:60 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_result_screen.dart:362:41 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\screens\aptitude_test_screen.dart:113:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\aptitude_test_screen.dart:114:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\aptitude_test_screen.dart:115:7 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_test_screen.dart:355:54 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_test_screen.dart:413:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_test_screen.dart:497:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\aptitude_test_screen.dart:503:31 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\course_suggestions_screen.dart:173:54 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\screens\course_suggestions_screen.dart:317:23 - prefer_const_constructors
+   info - Don't invoke 'print' in production code - lib\screens\courses_screen.dart:34:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\courses_screen.dart:164:9 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\courses_screen.dart:449:58 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\education_level_selection_screen.dart:121:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\education_level_selection_screen.dart:124:28 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\education_level_selection_screen.dart:135:30 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\screens\exams_screen.dart:37:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\exams_screen.dart:68:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\exams_screen.dart:131:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\exams_screen.dart:133:11 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\exams_screen.dart:153:9 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\exams_screen.dart:234:63 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\screens\exams_screen.dart:361:19 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\exams_screen.dart:425:60 - deprecated_member_use
+   info - Invalid use of a private type in a public API - lib\screens\explore_screen.dart:25:3 - library_private_types_in_public_api
+   info - Use 'const' with the constructor to improve performance - lib\screens\explore_screen.dart:333:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\explore_screen.dart:335:22 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\screens\explore_screen.dart:336:27 - prefer_const_literals_to_create_immutables
+   info - Don't invoke 'print' in production code - lib\screens\feed_screen.dart:34:9 - avoid_print
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\screens\feed_screen.dart:216:58 - deprecated_member_use
+   info - Don't invoke 'print' in production code - lib\screens\profile_settings_screen.dart:68:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\screens\profile_settings_screen.dart:155:9 - avoid_print
+   info - Use 'const' with the constructor to improve performance - lib\screens\register_screen.dart:314:23 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:216:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:217:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:219:24 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\screens\resume_analyzer_screen.dart:221:29 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:267:29 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:270:38 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:343:40 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:365:40 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_analyzer_screen.dart:390:40 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_result_screen.dart:191:17 - prefer_const_constructors
+   info - Unnecessary use of 'toList' in a spread - lib\screens\resume_result_screen.dart:407:16 - unnecessary_to_list_in_spreads
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_result_screen.dart:476:17 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_result_screen.dart:520:29 - prefer_const_constructors
+   info - Unnecessary use of 'toList' in a spread - lib\screens\resume_result_screen.dart:531:18 - unnecessary_to_list_in_spreads
+   info - Use 'const' with the constructor to improve performance - lib\screens\resume_upload_screen.dart:183:27 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\splash_screen.dart:65:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\trending_courses_screen.dart:298:17 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\screens\trending_courses_screen.dart:322:21 - prefer_const_constructors
+   info - Don't invoke 'print' in production code - lib\services\notification_service.dart:14:3 - avoid_print
+   info - Don't invoke 'print' in production code - lib\widgets\notification_badge.dart:30:7 - avoid_print
+

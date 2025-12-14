@@ -4,7 +4,7 @@ import '../services/notification_service.dart';
 import '../models/notification_model.dart';
 
 class NotificationsScreen extends StatefulWidget {
-  const NotificationsScreen({Key? key}) : super(key: key);
+  const NotificationsScreen({super.key});
 
   @override
   State<NotificationsScreen> createState() => _NotificationsScreenState();
@@ -201,10 +201,10 @@ class NotificationTile extends StatelessWidget {
   final VoidCallback onTap;
 
   const NotificationTile({
-    Key? key,
+    super.key,
     required this.notification,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +233,9 @@ class NotificationTile extends StatelessWidget {
         ],
       ),
       onTap: onTap,
-      tileColor: notification.isRead ? null : Colors.blue.withOpacity(0.1),
+      tileColor: notification.isRead
+          ? null
+          : Colors.blue.withValues(alpha: 0.1),
     );
   }
 

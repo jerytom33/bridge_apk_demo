@@ -4,7 +4,7 @@ import '../services/notification_service.dart';
 import '../screens/notifications_screen.dart';
 
 class NotificationBadge extends StatefulWidget {
-  const NotificationBadge({Key? key}) : super(key: key);
+  const NotificationBadge({super.key});
 
   @override
   State<NotificationBadge> createState() => _NotificationBadgeState();
@@ -27,7 +27,7 @@ class _NotificationBadgeState extends State<NotificationBadge> {
 
     // Listen to real-time FCM messages and update badge immediately
     _notificationService.setupForegroundListener(() {
-      print('🔔 Badge: FCM message received, refreshing badge...');
+      // print('🔔 Badge: FCM message received, refreshing badge...');
       // When a new notification arrives, refresh the badge
       if (mounted) {
         loadUnreadCount();

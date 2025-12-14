@@ -18,7 +18,7 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      print('🔍 Loading profile...');
+      // print('🔍 Loading profile...');
       final result = await ApiService.fetchProfile();
 
       if (result['success'] && result['data'] != null) {
@@ -26,7 +26,7 @@ class ProfileProvider with ChangeNotifier {
         final profileData = result['data']['profile'] ?? result['data'];
         if (profileData != null) {
           _profile = StudentProfile.fromJson(profileData);
-          print('✅ Profile loaded: ${_profile?.currentLevel}');
+          // print('✅ Profile loaded: ${_profile?.currentLevel}');
         } else {
           _error = 'No profile data found';
         }
@@ -35,7 +35,7 @@ class ProfileProvider with ChangeNotifier {
       }
     } catch (e) {
       _error = 'Load failed: $e';
-      print('❌ Load error: $e');
+      // print('❌ Load error: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -51,11 +51,11 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      print('🛠️ Setting up profile: $profileData');
+      // print('🛠️ Setting up profile: $profileData');
       final result = await ApiService.setupProfile(profileData);
 
       if (result['success']) {
-        print('✅ Setup success – reloading...');
+        // print('✅ Setup success – reloading...');
         await loadProfile(); // Reload fresh data
       } else {
         _error = result['error'] ?? 'Setup failed';
@@ -63,7 +63,7 @@ class ProfileProvider with ChangeNotifier {
       return result;
     } catch (e) {
       _error = 'Setup failed: $e';
-      print('❌ Setup error: $e');
+      // print('❌ Setup error: $e');
       return {'success': false, 'error': _error};
     } finally {
       _isLoading = false;

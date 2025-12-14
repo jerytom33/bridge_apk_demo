@@ -11,7 +11,7 @@ import 'api_service.dart';
 // Top-level function for background handling
 @pragma('vm:entry-point')
 Future<void> _handleBackgroundMessage(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
+  // print("Handling a background message: ${message.messageId}");
 }
 
 class NotificationService {
@@ -39,18 +39,18 @@ class NotificationService {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
+      // print('User granted permission');
 
       // Get FCM Token
       try {
         final fcmToken = await _firebaseMessaging.getToken();
-        print('FCM Token: $fcmToken');
+        // print('FCM Token: $fcmToken');
 
         if (fcmToken != null) {
           await registerFcmToken(fcmToken);
         }
       } catch (e) {
-        print('Error getting FCM token: $e');
+        // print('Error getting FCM token: $e');
       }
 
       // Handle background messages
@@ -58,39 +58,39 @@ class NotificationService {
 
       // Subscribe to general topic
       await _firebaseMessaging.subscribeToTopic('all_users');
-      print('Subscribed to all_users topic');
+      // print('Subscribed to all_users topic');
 
       // Setup interaction handling
       await setupInteractedMessage();
 
       // Handle foreground messages
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print('Got a message whilst in the foreground!');
-        print('Message data: ${message.data}');
+        // print('Got a message whilst in the foreground!');
+        // print('Message data: ${message.data}');
 
         if (message.notification != null) {
-          print('Message contained a notification: ${message.notification}');
+          // print('Message contained a notification: ${message.notification}');
           // Ideally show a local notification here using flutter_local_notifications
           // For now, we just print
         }
 
-        print('🔔 Notifying ${_foregroundListeners.length} badge listeners...');
+        // print('🔔 Notifying ${_foregroundListeners.length} badge listeners...');
         // Notify all registered listeners (for real-time badge update)
         for (var listener in _foregroundListeners) {
           listener();
         }
       });
     } else {
-      print('User declined or has not accepted permission');
+      // print('User declined or has not accepted permission');
     }
   }
 
   // Add listener for foreground messages
   void setupForegroundListener(Function() callback) {
     _foregroundListeners.add(callback);
-    print(
-      '🔔 Badge listener registered. Total listeners: ${_foregroundListeners.length}',
-    );
+    // print(
+    //   '🔔 Badge listener registered. Total listeners: ${_foregroundListeners.length}',
+    // );
   }
 
   // Handle interaction (tap on notification)
@@ -108,7 +108,7 @@ class NotificationService {
   }
 
   void _handleMessage(RemoteMessage message) {
-    print('Handling notification interaction: ${message.data}');
+    // print('Handling notification interaction: ${message.data}');
 
     // Extract data from notification payload
     final data = message.data;
@@ -195,12 +195,12 @@ class NotificationService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print('FCM Token registered successfully');
+        // print('FCM Token registered successfully');
       } else {
-        print('Failed to register FCM Token: ${response.body}');
+        //   // print('Failed to register FCM Token: ${response.body}');
       }
     } catch (e) {
-      print('Error registering FCM Token: $e');
+      // print('Error registering FCM Token: $e');
     }
   }
 

@@ -8,7 +8,7 @@ class ProfileCompletionScreen extends StatefulWidget {
   const ProfileCompletionScreen({super.key});
 
   @override
-  _ProfileCompletionScreenState createState() =>
+  State<ProfileCompletionScreen> createState() =>
       _ProfileCompletionScreenState();
 }
 
@@ -24,7 +24,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
 
   String? _selectedGender;
   String? _selectedEducationLevel; // New field
-  List<String> _selectedInterests = []; // New field
+  final List<String> _selectedInterests = []; // New field
   DateTime? _selectedDate;
   String? _selectedImagePath;
   bool _isLoading = false;
@@ -157,7 +157,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         'career_goals': _careerGoalsController.text.trim(),
       };
 
-      print('📤 Submitting profile completion: $profileData');
+      // print('📤 Submitting profile completion: $profileData');
 
       // Use updateStudentProfile instead of setupProfile
       final result = await ApiService.updateStudentProfile(profileData);
@@ -180,7 +180,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         await prefs.setString('user_interests', _selectedInterests.join(','));
         await prefs.setBool('profile_completed', true);
 
-        print('✅ Profile completion successful');
+        // print('✅ Profile completion successful');
 
         if (!mounted) return;
         // Show success message
@@ -198,7 +198,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
           (route) => false,
         );
       } else {
-        print('❌ Profile completion failed: ${result['error']}');
+        // print('❌ Profile completion failed: ${result['error']}');
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -208,7 +208,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         );
       }
     } catch (e) {
-      print('❌ Error in profile completion: $e');
+      // print('❌ Error in profile completion: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

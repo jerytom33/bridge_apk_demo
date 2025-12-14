@@ -310,16 +310,16 @@ class ApiService {
         return {'success': false, 'error': 'Not authenticated'};
       }
 
-      print('fetching student profile from: $baseUrl/student/profile/');
+      // print('fetching student profile from: $baseUrl/student/profile/');
 
       final response = await http.get(
         Uri.parse('$baseUrl/student/profile/'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
-      print(
-        'Student profile response: ${response.statusCode} - ${response.body}',
-      );
+      // print(
+      //   'Student profile response: ${response.statusCode} - ${response.body}',
+      // );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -342,7 +342,7 @@ class ApiService {
         }
       }
     } catch (e) {
-      print('Error fetching student profile: $e');
+      // print('Error fetching student profile: $e');
       return {'success': false, 'error': 'Network error: ${e.toString()}'};
     }
   }
@@ -358,8 +358,8 @@ class ApiService {
         return {'success': false, 'error': 'Not authenticated'};
       }
 
-      print('🔧 Updating profile at: $baseUrl/student/profile/');
-      print('📦 Data: $profileData');
+      // print('🔧 Updating profile at: $baseUrl/student/profile/');
+      // print('📦 Data: $profileData');
 
       final response = await http
           .patch(
@@ -373,8 +373,8 @@ class ApiService {
           )
           .timeout(const Duration(seconds: 30));
 
-      print('📡 Response status: ${response.statusCode}');
-      print('📄 Response body: ${response.body}');
+      // print('📡 Response status: ${response.statusCode}');
+      // print('📄 Response body: ${response.body}');
 
       // Check if response is HTML (error page)
       if (response.body.trim().startsWith('<') ||
@@ -405,7 +405,7 @@ class ApiService {
         }
       }
     } catch (e) {
-      print('❌ Exception in updateStudentProfile: $e');
+      // print('❌ Exception in updateStudentProfile: $e');
       return {'success': false, 'error': 'Network error: ${e.toString()}'};
     }
   }
@@ -419,8 +419,8 @@ class ApiService {
         return {'success': false, 'error': 'Not authenticated'};
       }
 
-      print('🔧 Profile setup endpoint: $baseUrl/student/profile/');
-      print('📦 Profile setup data: $profileData');
+      // print('🔧 Profile setup endpoint: $baseUrl/student/profile/');
+      // print('📦 Profile setup data: $profileData');
 
       // Use PATCH to the same endpoint as profile update
       final response = await http
@@ -434,13 +434,13 @@ class ApiService {
           )
           .timeout(const Duration(seconds: 30));
 
-      print('📡 Profile setup response status: ${response.statusCode}');
-      print('📄 Profile setup response body: ${response.body}');
+      // print('📡 Profile setup response status: ${response.statusCode}');
+      // print('📄 Profile setup response body: ${response.body}');
 
       // Check if response is HTML (error page)
       if (response.body.trim().startsWith('<') ||
           response.body.trim().startsWith('<!')) {
-        print('❌ Profile setup returned HTML error page');
+        // print('❌ Profile setup returned HTML error page');
         return {
           'success': false,
           'error': 'Server error: Endpoint not found (${response.statusCode})',
@@ -449,12 +449,12 @@ class ApiService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        print('✅ Profile setup successful');
+        // print('✅ Profile setup successful');
         return {'success': true, 'data': data};
       } else {
         try {
           final error = jsonDecode(response.body);
-          print('❌ Profile setup failed: ${error['error'] ?? error['detail']}');
+          // print('❌ Profile setup failed: ${error['error'] ?? error['detail']}');
           return {
             'success': false,
             'error':
@@ -468,7 +468,7 @@ class ApiService {
         }
       }
     } catch (e) {
-      print('❌ Profile setup exception: $e');
+      // print('❌ Profile setup exception: $e');
       return {'success': false, 'error': 'Network error: ${e.toString()}'};
     }
   }
@@ -997,7 +997,7 @@ class ApiService {
 
       if (kDebugMode) {
         print('STUDENT_DASHBOARD → ${response.statusCode}');
-        print('Dashboard Response: ${response.body}');
+        // print('Dashboard Response: ${response.body}');
       }
 
       if (response.statusCode == 200) {

@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'post.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class Post {
   final int id;
   final String title;

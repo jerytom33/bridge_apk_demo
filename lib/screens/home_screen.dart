@@ -65,12 +65,12 @@ class HomeContent extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 4),
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 8, right: 4),
                       child: CircleAvatar(
                         radius: 18,
-                        backgroundColor: const Color(0xFF6C63FF),
-                        child: const Icon(
+                        backgroundColor: Color(0xFF6C63FF),
+                        child: Icon(
                           Icons.person,
                           color: Colors.white,
                           size: 20,

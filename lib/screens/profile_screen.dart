@@ -60,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
 
     // Debug print to verify data
-    print('Profile loaded: $_userName, $_userEmail, Image: $_profileImageUrl');
+    // print('Profile loaded: $_userName, $_userEmail, Image: $_profileImageUrl');
   }
 
   Future<void> _pickProfileImage() async {
@@ -167,10 +167,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           final imageFile = File(savedImagePath);
           if (imageFile.existsSync()) {
             await imageFile.delete();
-            print('🗑️ Deleted profile image: $savedImagePath');
+            // print('🗑️ Deleted profile image: $savedImagePath');
           }
         } catch (e) {
-          print('⚠️ Error deleting image file: $e');
+          // print('⚠️ Error deleting image file: $e');
         }
       }
 
@@ -186,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await prefs.remove('user_address');
       await prefs.remove('user_place');
 
-      print('✅ All user data cleared from SharedPreferences');
+      // print('✅ All user data cleared from SharedPreferences');
 
       if (!mounted) return;
 
@@ -256,7 +256,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             border: Border.all(color: Colors.white, width: 5),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 20,
                                 spreadRadius: 5,
                               ),

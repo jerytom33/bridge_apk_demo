@@ -18,7 +18,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _streamController = TextEditingController();
   final _careerGoalsController = TextEditingController();
 
-  List<String> _selectedInterests = [];
+  final List<String> _selectedInterests = [];
   bool _isLoading = false;
 
   // Predefined interests options
@@ -263,8 +263,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: const Color(0xFF6C63FF),
+              borderSide: const BorderSide(
+                color: Color(0xFF6C63FF),
                 width: 1.5,
               ),
             ),
@@ -300,7 +300,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: controller.text.isEmpty ? null : controller.text,
+          initialValue: controller.text.isEmpty ? null : controller.text,
           isExpanded: true, // Fix overflow by expanding to fill width
           decoration: InputDecoration(
             hintText: hint,
@@ -322,8 +322,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: const Color(0xFF6C63FF),
+              borderSide: const BorderSide(
+                color: Color(0xFF6C63FF),
                 width: 1.5,
               ),
             ),
