@@ -12,6 +12,7 @@ class Post {
   final int likeCount;
   final bool isLiked;
   final bool isSaved;
+  final String? imageUrl;
 
   Post({
     required this.id,
@@ -22,6 +23,7 @@ class Post {
     required this.likeCount,
     required this.isLiked,
     required this.isSaved,
+    this.imageUrl,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class Post {
       likeCount: int.tryParse(json['like_count']?.toString() ?? '') ?? 0,
       isLiked: json['is_liked'] ?? false,
       isSaved: json['is_saved'] ?? false,
+      imageUrl: json['image'] as String? ?? json['image_url'] as String?,
     );
   }
 
@@ -51,6 +54,7 @@ class Post {
     int? likeCount,
     bool? isLiked,
     bool? isSaved,
+    String? imageUrl,
   }) {
     return Post(
       id: id ?? this.id,
@@ -61,6 +65,7 @@ class Post {
       likeCount: likeCount ?? this.likeCount,
       isLiked: isLiked ?? this.isLiked,
       isSaved: isSaved ?? this.isSaved,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 }
