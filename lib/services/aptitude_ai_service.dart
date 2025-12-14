@@ -32,7 +32,7 @@ class AptitudeAiService {
               '$baseUrl/api/aptitude/personalized-questions/?level=$educationLevel&count=$questionCount',
             ),
             headers: {
-              'Authorization': 'Token $token',
+              'Authorization': 'Bearer $token',
               'Content-Type': 'application/json',
             },
           )
@@ -98,7 +98,7 @@ class AptitudeAiService {
           .post(
             Uri.parse('$baseUrl/api/aptitude/analyze-results/'),
             headers: {
-              'Authorization': 'Token $token',
+              'Authorization': 'Bearer $token',
               'Content-Type': 'application/json',
             },
             body: json.encode({'questions': questions, 'answers': answers}),

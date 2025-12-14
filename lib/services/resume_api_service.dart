@@ -26,8 +26,8 @@ class ResumeApiService {
       var uri = Uri.parse('$baseUrl/api/resume/upload/');
       var request = http.MultipartRequest('POST', uri);
 
-      // Add authorization header (Token format for Gemini backend)
-      request.headers['Authorization'] = 'Token $token';
+      // Add authorization header (Bearer format for JWT/SimpleJWT)
+      request.headers['Authorization'] = 'Bearer $token';
 
       // Add PDF file
       request.files.add(
