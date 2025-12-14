@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import '../data/predefined_aptitude_test.dart';
 
 /// Service for AI-powered personalized aptitude tests using Google Gemini
 class AptitudeAiService {
@@ -129,14 +130,17 @@ class AptitudeAiService {
         );
       }
     } on TimeoutException catch (e) {
-      throw Exception(e.message ?? 'Request timeout. Please try again.');
-    } on SocketException {
-      throw Exception('No internet connection. Please check your network.');
+      debugPrint('TimeoutException: ${e.message}');
+      debugPrint('Falling back to predefined questions for $educationLevel');
+      return PredefinedAptitudeTest.getQuestions(educationLevel);
+    } on SocketException catch (e) {
+      debugPrint('SocketException: ${e.message}');
+      debugPrint('Falling back to predefined questions for $educationLevel');
+      return PredefinedAptitudeTest.getQuestions(educationLevel);
     } catch (e) {
-      if (e is Exception) {
-        rethrow;
-      }
-      throw Exception('An error occurred: ${e.toString()}');
+      debugPrint('General Exception: $e');
+      debugPrint('Falling back to predefined questions for $educationLevel');
+      return PredefinedAptitudeTest.getQuestions(educationLevel);
     }
   }
 
@@ -183,17 +187,10 @@ class AptitudeAiService {
       } else {
         throw Exception('Failed to analyze results: ${response.statusCode}');
       }
-    } on SocketException {
-      throw Exception('No internet connection. Please check your network.');
-    } on TimeoutException catch (e) {
-      throw Exception(e.message ?? 'Request timeout. Please try again.');
-    } on FormatException {
-      throw Exception('Invalid response from server. Please try again.');
     } catch (e) {
-      if (e is Exception) {
-        rethrow;
-      }
-      throw Exception('An error occurred: ${e.toString()}');
+      debugPrint('Analysis Error: $e');
+      debugPrint('Falling back to local analysis');
+      return PredefinedAptitudeTest.analyzeResults(questions, answers);
     }
   }
 

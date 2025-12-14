@@ -219,20 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Forgot Password
-              TextButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Forgot Password feature coming soon!'),
-                    ),
-                  );
-                },
-                child: Text(
-                  'Forgot Password?',
-                  style: GoogleFonts.poppins(color: const Color(0xFF6C63FF)),
-                ),
-              ),
+
               const SizedBox(height: 50),
               // Register Link
               Row(

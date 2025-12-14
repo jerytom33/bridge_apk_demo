@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import '../services/aptitude_ai_service.dart';
 import 'aptitude_result_screen.dart';
+import 'fallback_aptitude_result_screen.dart';
 import 'login_screen.dart';
 
 class AptitudeTestScreen extends StatefulWidget {
@@ -132,22 +133,43 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
 
       if (!mounted) return;
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AptitudeResultScreen(
-            score: (result['score'] as num?)?.toInt() ?? 0,
-            totalQuestions: _questions.length,
-            timeTaken: timeTaken,
-            categoryBreakdown: Map<String, dynamic>.from(
-              result['category_breakdown'] ?? {},
+      if (result['is_fallback'] == true) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FallbackAptitudeResultScreen(
+              score: (result['score'] as num?)?.toInt() ?? 0,
+              totalQuestions: _questions.length,
+              timeTaken: timeTaken,
+              categoryBreakdown: Map<String, dynamic>.from(
+                result['category_breakdown'] ?? {},
+              ),
+              answers: apiAnswers,
+              questions: _questions,
+              aiAnalysis: result['ai_analysis'],
+              educationLevel: widget.educationLevel,
             ),
-            answers: apiAnswers, // Pass the converted answers
-            questions: _questions,
-            aiAnalysis: result['ai_analysis'],
           ),
-        ),
-      );
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AptitudeResultScreen(
+              score: (result['score'] as num?)?.toInt() ?? 0,
+              totalQuestions: _questions.length,
+              timeTaken: timeTaken,
+              categoryBreakdown: Map<String, dynamic>.from(
+                result['category_breakdown'] ?? {},
+              ),
+              answers: apiAnswers,
+              questions: _questions,
+              aiAnalysis: result['ai_analysis'],
+              educationLevel: widget.educationLevel,
+            ),
+          ),
+        );
+      }
     } catch (e) {
       setState(() {
         _isSubmitting = false;
@@ -196,7 +218,10 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SpinKitFadingCircle(color: Color(0xFF6C63FF), size: 60.0),
+            const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6C63FF)),
+              strokeWidth: 4.0,
+            ),
             const SizedBox(height: 24),
             Text(
               'Generating ${_getLevelDisplayName(widget.educationLevel)} questions...',

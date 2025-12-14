@@ -274,9 +274,9 @@ class HomeContent extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
 
-                    // Subjects Section
+                    // Explore Section
                     Text(
-                      'Subjects',
+                      'Explore',
                       style: GoogleFonts.poppins(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
