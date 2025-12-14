@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 import '../services/api_service.dart';
 
 import 'login_screen.dart';
+import 'notifications_screen.dart';
+import 'privacy_policy_screen.dart';
+import 'help_support_screen.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
   const ProfileSettingsScreen({super.key});
@@ -609,9 +612,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       leading: const Icon(Icons.notifications),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Notification settings coming soon!'),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NotificationsScreen(),
                           ),
                         );
                       },
@@ -624,9 +628,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       leading: const Icon(Icons.privacy_tip),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Privacy settings coming soon!'),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PrivacyPolicyScreen(),
                           ),
                         );
                       },
@@ -639,9 +644,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       leading: const Icon(Icons.help),
                       trailing: const Icon(Icons.arrow_forward_ios),
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Help & support coming soon!'),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HelpSupportScreen(),
                           ),
                         );
                       },
