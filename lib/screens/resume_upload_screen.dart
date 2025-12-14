@@ -199,7 +199,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
                           const SizedBox(height: 20),
                           SizedBox(
                             width: double.infinity,
-                            height: 45,
+                            height: 50,
                             child: ElevatedButton(
                               onPressed: _pickFile,
                               style: ElevatedButton.styleFrom(
@@ -214,6 +214,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
                                 style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
+                                  height: 1.2,
                                 ),
                               ),
                             ),
@@ -225,7 +226,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
                   const SizedBox(height: 30),
                   // Upload Button
                   SizedBox(
-                    height: 50,
+                    height: 55,
                     child: ElevatedButton(
                       onPressed: _isUploading ? null : _uploadResume,
                       style: ElevatedButton.styleFrom(
@@ -245,6 +246,7 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
                               style: GoogleFonts.poppins(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                height: 1.2,
                               ),
                             ),
                     ),

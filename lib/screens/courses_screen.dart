@@ -436,7 +436,9 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                     ),
                                     const SizedBox(height: 12),
                                     // Level and Category Tags
-                                    Row(
+                                    Wrap(
+                                      spacing: 10,
+                                      runSpacing: 10,
                                       children: [
                                         _buildTag(
                                           context,
@@ -446,7 +448,6 @@ class _CoursesScreenState extends State<CoursesScreen> {
                                             context,
                                           ).primaryColor.withOpacity(0.1),
                                         ),
-                                        const SizedBox(width: 10),
                                         _buildTag(
                                           context,
                                           label: course.duration,

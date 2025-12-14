@@ -45,7 +45,7 @@ class AptitudeAiService {
             },
           );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonData = json.decode(response.body);
 
         // Extract questions from the response (Gemini backend format)
@@ -112,7 +112,7 @@ class AptitudeAiService {
             },
           );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonData = json.decode(response.body);
         return jsonData['data'] ?? jsonData;
       } else if (response.statusCode == 401) {

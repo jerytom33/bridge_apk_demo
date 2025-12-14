@@ -472,7 +472,9 @@ class _ExamsScreenState extends State<ExamsScreen> {
                                           ),
                                     ),
                                     const SizedBox(height: 16),
-                                    Row(
+                                    Wrap(
+                                      spacing: 12,
+                                      runSpacing: 8,
                                       children: [
                                         _buildTag(
                                           context,
@@ -481,7 +483,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
                                           color: Colors.grey[700]!,
                                           bgColor: Colors.grey[200]!,
                                         ),
-                                        const SizedBox(width: 12),
                                         _buildTag(
                                           context,
                                           icon: Icons.book,

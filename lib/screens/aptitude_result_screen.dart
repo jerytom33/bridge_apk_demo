@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'home_screen.dart';
+import 'main_wrapper.dart';
 
 class AptitudeResultScreen extends StatelessWidget {
   final int score;
   final int total;
-  final int scienceScore;
-  final int commerceScore;
-  final int humanitiesScore;
+  final Map<String, dynamic> categoryBreakdown;
   final String educationLevel;
   final int? timeTaken;
   final Map<String, String>? answers;
@@ -17,22 +15,23 @@ class AptitudeResultScreen extends StatelessWidget {
   const AptitudeResultScreen({
     super.key,
     required this.score,
-    int? totalQuestions, // Accept either total or totalQuestions
-    this.scienceScore = 0,
-    this.commerceScore = 0,
-    this.humanitiesScore = 0,
+    int? totalQuestions,
+    required this.categoryBreakdown,
     this.educationLevel = '10th',
     this.timeTaken,
     this.answers,
     this.questions,
     this.aiAnalysis,
-  }) : total = totalQuestions ?? 15;
+  }) : total = totalQuestions ?? 10;
 
   @override
   Widget build(BuildContext context) {
-    final percentage = (score / total * 100).round();
+    // 1. Calculate Percentage Logic
+    final int calculatedPercentage = score > total
+        ? score
+        : (score / total * 100).round();
 
-    // Determine recommended stream based on highest section score
+    // Determine recommended stream
     String recommendedStream = _getRecommendedStream();
     Color streamColor = _getStreamColor(recommendedStream);
 
@@ -75,11 +74,13 @@ class AptitudeResultScreen extends StatelessWidget {
                     width: 180,
                     height: 180,
                     child: CircularProgressIndicator(
-                      value: percentage / 100,
+                      value: calculatedPercentage / 100,
                       strokeWidth: 12,
                       backgroundColor: Colors.grey[300],
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        percentage >= 70 ? Colors.green : Colors.orange,
+                        calculatedPercentage >= 70
+                            ? Colors.green
+                            : Colors.orange,
                       ),
                     ),
                   ),
@@ -87,7 +88,7 @@ class AptitudeResultScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '$percentage%',
+                        '$calculatedPercentage%',
                         style: GoogleFonts.poppins(
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
@@ -95,7 +96,7 @@ class AptitudeResultScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '$score/$total',
+                        '$calculatedPercentage/100',
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           color: Colors.grey[600],
@@ -119,34 +120,30 @@ class AptitudeResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            _buildSectionScore(
-              educationLevel == '10th' ? 'Science' : 'STEM & Technical',
-              scienceScore,
-              5,
-              const Color(0xFF6C63FF),
-              Icons.science,
-            ),
-            const SizedBox(height: 15),
+            // Dynamic Sections from Backend
+            ...categoryBreakdown.entries.map((entry) {
+              final title = entry.key;
+              final data = entry.value as Map<String, dynamic>;
+              final correct = (data['correct'] as num?)?.toInt() ?? 0;
+              final totalQs = (data['total'] as num?)?.toInt() ?? 1;
 
-            _buildSectionScore(
-              educationLevel == '10th' ? 'Commerce' : 'Business & Finance',
-              commerceScore,
-              5,
-              const Color(0xFF00BFA5),
-              Icons.business,
-            ),
-            const SizedBox(height: 15),
+              return Column(
+                children: [
+                  _buildSectionScore(
+                    title,
+                    correct,
+                    totalQs,
+                    _getCategoryColor(title),
+                    _getCategoryIcon(title),
+                  ),
+                  const SizedBox(height: 15),
+                ],
+              );
+            }),
 
-            _buildSectionScore(
-              educationLevel == '10th' ? 'Humanities' : 'Creative & Social',
-              humanitiesScore,
-              5,
-              const Color(0xFFFF6F00),
-              Icons.menu_book,
-            ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
 
-            // Recommendation Card
+            // Recommended Stream Section
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -183,7 +180,9 @@ class AptitudeResultScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    _getStreamDescription(recommendedStream),
+                    aiAnalysis != null && aiAnalysis!['recommendation'] != null
+                        ? aiAnalysis!['recommendation'].toString()
+                        : _getStreamDescription(recommendedStream),
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.grey[700],
@@ -196,6 +195,121 @@ class AptitudeResultScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
+            // Suggested Careers Section
+            Text(
+              'Suggested Career Paths',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 15),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: _getCareerSuggestions(recommendedStream).map((career) {
+                return Chip(
+                  label: Text(
+                    career,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF6C63FF),
+                    ),
+                  ),
+                  backgroundColor: const Color(0xFF6C63FF).withOpacity(0.1),
+                  side: BorderSide.none,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                );
+              }).toList(),
+            ),
+
+            if (aiAnalysis != null) ...[
+              const SizedBox(height: 30),
+              Text(
+                'AI Analysis',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 15),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.indigo.shade50,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.indigo.shade100),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.auto_awesome,
+                          color: Colors.indigo,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Gemini Insights',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    if (aiAnalysis!['strong_areas'] != null) ...[
+                      Text(
+                        'Strengths:',
+                        style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                      ),
+                      ...(aiAnalysis!['strong_areas'] as List).map(
+                        (e) => Text(
+                          '• $e',
+                          style: GoogleFonts.poppins(fontSize: 13),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                    if (aiAnalysis!['weak_areas'] != null) ...[
+                      Text(
+                        'Areas to Improve:',
+                        style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                      ),
+                      ...(aiAnalysis!['weak_areas'] as List).map(
+                        (e) => Text(
+                          '• $e',
+                          style: GoogleFonts.poppins(fontSize: 13),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                    Text(
+                      aiAnalysis!['overall_performance'] ??
+                          aiAnalysis!['analysis'] ??
+                          aiAnalysis!['summary'] ??
+                          'Detailed analysis of your aptitude performance.',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Colors.black87,
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            const SizedBox(height: 30),
+
             // Action Button
             SizedBox(
               height: 50,
@@ -203,7 +317,9 @@ class AptitudeResultScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const MainWrapper(),
+                    ),
                     (route) => false,
                   );
                 },
@@ -236,7 +352,7 @@ class AptitudeResultScreen extends StatelessWidget {
     Color color,
     IconData icon,
   ) {
-    final percentage = (score / total * 100).round();
+    final percentage = total > 0 ? (score / total * 100).round() : 0;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -305,18 +421,63 @@ class AptitudeResultScreen extends StatelessWidget {
     );
   }
 
+  Color _getCategoryColor(String title) {
+    final t = title.toLowerCase();
+    if (t.contains('logic')) return const Color(0xFF6C63FF);
+    if (t.contains('quant')) return const Color(0xFF00BFA5);
+    if (t.contains('verbal')) return const Color(0xFFFF6F00);
+    if (t.contains('general') || t.contains('gk')) {
+      return const Color(0xFFE91E63);
+    }
+    return Colors.blue;
+  }
+
+  IconData _getCategoryIcon(String title) {
+    final t = title.toLowerCase();
+    if (t.contains('logic')) return Icons.psychology;
+    if (t.contains('quant')) return Icons.calculate;
+    if (t.contains('verbal')) return Icons.chat;
+    if (t.contains('general') || t.contains('gk')) return Icons.public;
+    return Icons.star;
+  }
+
   String _getRecommendedStream() {
-    if (scienceScore > commerceScore && scienceScore > humanitiesScore) {
+    // Calculate stream scores based on categories
+    int scienceScore = 0;
+    int commerceScore = 0;
+    int humanitiesScore = 0;
+
+    categoryBreakdown.forEach((key, value) {
+      final k = key.toLowerCase();
+      final data = value as Map<String, dynamic>;
+      // Get percentage performance in this category
+      final correct = (data['correct'] as num?)?.toInt() ?? 0;
+      final total = (data['total'] as num?)?.toInt() ?? 1;
+      final score = (correct / total * 100).toInt();
+
+      if (k.contains('quant')) {
+        scienceScore += (score * 1.2).toInt(); // High weight for Sci
+        commerceScore += (score * 1.5).toInt(); // Highest for Comm
+      } else if (k.contains('logic')) {
+        scienceScore += (score * 1.5).toInt(); // Highest for Sci
+        commerceScore += score;
+        humanitiesScore += (score * 0.5).toInt();
+      } else if (k.contains('verbal') || k.contains('english')) {
+        humanitiesScore += (score * 1.5).toInt(); // Highest for Hum
+        commerceScore += (score * 0.5).toInt();
+      } else if (k.contains('general') || k.contains('gk')) {
+        humanitiesScore += (score * 1.2).toInt();
+        commerceScore += (score * 0.8).toInt();
+      }
+    });
+
+    if (scienceScore >= commerceScore && scienceScore >= humanitiesScore) {
       return 'Science Stream';
-    } else if (commerceScore > scienceScore &&
-        commerceScore > humanitiesScore) {
+    } else if (commerceScore >= scienceScore &&
+        commerceScore >= humanitiesScore) {
       return 'Commerce Stream';
-    } else if (humanitiesScore > scienceScore &&
-        humanitiesScore > commerceScore) {
-      return 'Humanities Stream';
     } else {
-      // If there's a tie, default to Science
-      return 'Science Stream';
+      return 'Humanities Stream';
     }
   }
 
@@ -370,6 +531,80 @@ class AptitudeResultScreen extends StatelessWidget {
           return 'Outstanding creative and social intelligence! You have strong communication and empathy. Recommended fields: Law, Arts, Psychology, Media, Design, Journalism, Public Relations.';
         default:
           return '';
+      }
+    }
+  }
+
+  List<String> _getCareerSuggestions(String stream) {
+    if (educationLevel == '10th') {
+      switch (stream) {
+        case 'Science Stream':
+          return [
+            'Engineering',
+            'Medicine',
+            'Computer Science',
+            'Biotechnology',
+            'Architecture',
+            'Pilot / Aviation',
+            'Research Scientist',
+          ];
+        case 'Commerce Stream':
+          return [
+            'Chartered Accountancy (CA)',
+            'Investment Banking',
+            'Business Management (BBA/MBA)',
+            'Economics',
+            'Digital Marketing',
+            'Company Secretary (CS)',
+            'Entrepreneurship',
+          ];
+        case 'Humanities Stream':
+          return [
+            'Law / Legal Services',
+            'Psychology',
+            'Journalism & Mass Media',
+            'Civil Services (IAS/IPS)',
+            'Product Design',
+            'Social Work',
+            'Teaching / Academia',
+          ];
+        default:
+          return [];
+      }
+    } else {
+      switch (stream) {
+        case 'Science Stream':
+          return [
+            'Software Engineering',
+            'Data Science & AI',
+            'Medical Professional',
+            'Robotics',
+            'Astrophysics',
+            'Cybersecurity',
+            'Pharmacology',
+          ];
+        case 'Commerce Stream':
+          return [
+            'Financial Analyst',
+            'Corporate Law',
+            'Stock Market Trading',
+            'Human Resource Mgmt',
+            'Supply Chain Mgmt',
+            'Banking Professional',
+            'Actuarial Science',
+          ];
+        case 'Humanities Stream':
+          return [
+            'International Relations',
+            'Clinical Psychology',
+            'Content Strategy',
+            'Graphic Design',
+            'Public Policy',
+            'Anthropology',
+            'Film Making',
+          ];
+        default:
+          return [];
       }
     }
   }

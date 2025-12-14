@@ -475,12 +475,14 @@ class ResumeResultScreen extends StatelessWidget {
               children: [
                 Icon(Icons.school, color: const Color(0xFF6C63FF), size: 24),
                 const SizedBox(width: 10),
-                Text(
-                  'Recommended Courses',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF6C63FF),
+                Expanded(
+                  child: Text(
+                    'Recommended Courses',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF6C63FF),
+                    ),
                   ),
                 ),
               ],

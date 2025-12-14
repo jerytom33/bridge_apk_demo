@@ -107,6 +107,11 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
         answers: _answers,
       );
 
+      print('=== DEBUG APTITUDE RESULT ===');
+      print(result);
+      print('KEYS: ${result.keys.toList()}');
+      print('=============================');
+
       final timeTaken = DateTime.now().difference(_startTime).inSeconds;
 
       if (!mounted) return;
@@ -115,9 +120,12 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => AptitudeResultScreen(
-            score: result['score'] ?? 0,
+            score: (result['score'] as num?)?.toInt() ?? 0,
             totalQuestions: _questions.length,
             timeTaken: timeTaken,
+            categoryBreakdown: Map<String, dynamic>.from(
+              result['category_breakdown'] ?? {},
+            ),
             answers: _answers,
             questions: _questions,
             aiAnalysis: result['ai_analysis'],
