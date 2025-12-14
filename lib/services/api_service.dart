@@ -925,8 +925,84 @@ class ApiService {
         return {'success': false, 'error': 'Not authenticated'};
       }
 
+      print('🔵 Calling like API for post $postId');
       final response = await http.post(
         Uri.parse('$baseUrl/feed/posts/$postId/like/'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      print('🔵 Like API response status: ${response.statusCode}');
+      print('🔵 Like API response body: ${response.body}');
+
+      final data = jsonDecode(response.body);
+
+      // Check success based on body or status code
+      if ((response.statusCode >= 200 && response.statusCode < 300) ||
+          (data is Map && data['success'] == true)) {
+        return {'success': true, 'data': data};
+      } else {
+        print('❌ Like API error response: $data');
+        return {
+          'success': false,
+          'error': data['error'] ?? 'Failed to like post',
+        };
+      }
+    } catch (e) {
+      print('❌ Like API exception: $e');
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Save post endpoint
+  static Future<Map<String, dynamic>> savePost(int postId) async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        return {'success': false, 'error': 'Not authenticated'};
+      }
+
+      print('🔵 Calling save API for post $postId');
+      final response = await http.post(
+        Uri.parse('$baseUrl/feed/posts/$postId/save/'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'post_id': postId}),
+      );
+
+      print('🔵 Save API response status: ${response.statusCode}');
+      print('🔵 Save API response body: ${response.body}');
+
+      final data = jsonDecode(response.body);
+
+      // Check success based on body or status code
+      if ((response.statusCode >= 200 && response.statusCode < 300) ||
+          (data is Map && data['success'] == true)) {
+        return {'success': true, 'data': data};
+      } else {
+        print('❌ Save API error response: $data');
+        return {
+          'success': false,
+          'error': data['error'] ?? 'Failed to save post',
+        };
+      }
+    } catch (e) {
+      print('❌ Save API exception: $e');
+      return {'success': false, 'error': 'Network error: ${e.toString()}'};
+    }
+  }
+
+  // Get saved posts endpoint
+  static Future<Map<String, dynamic>> getSavedPosts() async {
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        return {'success': false, 'error': 'Not authenticated'};
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/feed/posts/saved/'),
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -937,7 +1013,7 @@ class ApiService {
         final error = jsonDecode(response.body);
         return {
           'success': false,
-          'error': error['error'] ?? 'Failed to like post',
+          'error': error['error'] ?? 'Failed to fetch saved posts',
         };
       }
     } catch (e) {
@@ -945,21 +1021,17 @@ class ApiService {
     }
   }
 
-  // Save post endpoint (TO BE IMPLEMENTED)
-  static Future<Map<String, dynamic>> savePost(int postId) async {
+  // Get liked posts endpoint
+  static Future<Map<String, dynamic>> getLikedPosts() async {
     try {
       final token = await _getToken();
       if (token == null) {
         return {'success': false, 'error': 'Not authenticated'};
       }
 
-      final response = await http.post(
-        Uri.parse('$baseUrl/feed/posts/$postId/save/'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({'post_id': postId}),
+      final response = await http.get(
+        Uri.parse('$baseUrl/feed/posts/liked/'),
+        headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.statusCode == 200) {
@@ -969,7 +1041,7 @@ class ApiService {
         final error = jsonDecode(response.body);
         return {
           'success': false,
-          'error': error['error'] ?? 'Failed to save post',
+          'error': error['error'] ?? 'Failed to fetch liked posts',
         };
       }
     } catch (e) {

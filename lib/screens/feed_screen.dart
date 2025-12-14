@@ -71,17 +71,7 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   Future<bool> _onLikeButtonTap(bool isLiked, int postId) async {
-    // Optimistic update handled by LikeButton usually, but we sync state
-    // Actually LikeButton handles the animation, we just return the new state?
-    // Let's call API
-
-    // We don't have a direct 'likePost' in ApiService public interface shown in previous file view?
-    // Wait, I saw `ApiService.likePost` being used in `FeedProvider`.
-    // I need to assume it exists or check. I will assume it exists based on FeedProvider usage.
-    // Wait, I should check `api_service.dart` again if unsure.
-    // FeedProvider at line 55 call ApiService.likePost(postId).
-
-    // Optimistic local update
+    // Optimistic update - update UI first
     final index = _posts.indexWhere((p) => p.id == postId);
     if (index != -1) {
       final post = _posts[index];
@@ -94,23 +84,38 @@ class _FeedScreenState extends State<FeedScreen> {
     }
 
     try {
-      // Warning: ApiService might not be static or exposed?
-      // In FeedProvider it was `ApiService.likePost`.
-      // I will assume it is static.
-      // Actually, looking at `api_service.dart` viewing lines 700-766, I didn't see `likePost`.
-      // I saw `getFeedPosts`.
-      // I should have checked if `likePost` exists.
-      // I will view ApiService full content or search it.
-      // Re-reading FeedProvider: `ApiService.likePost(postId)`.
-      // So likely it exists.
+      // Call backend API to sync
+      final result = await ApiService.likePost(postId);
 
-      // If it doesn't exist, this code will fail compile. I'll take the risk or just check quickly.
-      // Let's assume it exists given FeedProvider uses it.
-
-      // Actually LikeButton expects a Future<bool?>
-      // We return the NEW state?
-      return !isLiked;
+      if (result['success']) {
+        print('✅ Post $postId like status updated to ${!isLiked}');
+        return !isLiked; // Return new state
+      } else {
+        // Revert on failure
+        if (index != -1 && mounted) {
+          final post = _posts[index];
+          setState(() {
+            _posts[index] = post.copyWith(
+              isLiked: isLiked,
+              likeCount: isLiked ? post.likeCount + 1 : post.likeCount - 1,
+            );
+          });
+        }
+        print('❌ Failed to update like: ${result['error']}');
+        return isLiked; // Revert
+      }
     } catch (e) {
+      print('❌ Error liking post: $e');
+      // Revert on error
+      if (index != -1 && mounted) {
+        final post = _posts[index];
+        setState(() {
+          _posts[index] = post.copyWith(
+            isLiked: isLiked,
+            likeCount: isLiked ? post.likeCount + 1 : post.likeCount - 1,
+          );
+        });
+      }
       return isLiked; // Revert
     }
   }
