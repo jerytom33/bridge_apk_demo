@@ -12,6 +12,7 @@ class Course {
   final bool isActive;
   final String createdAt;
   bool isSaved;
+  final String? imageUrl;
 
   Course({
     required this.id,
@@ -27,6 +28,7 @@ class Course {
     required this.isActive,
     required this.createdAt,
     this.isSaved = false,
+    this.imageUrl,
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class Course {
       isActive: json['is_active'] ?? false,
       createdAt: json['created_at'] ?? '',
       isSaved: json['is_saved'] ?? false,
+      imageUrl: json['image'] as String? ?? json['image_url'] as String?,
     );
   }
 
@@ -79,6 +82,7 @@ class Course {
     bool? isActive,
     String? createdAt,
     bool? isSaved,
+    String? imageUrl,
   }) {
     return Course(
       id: id ?? this.id,
@@ -94,6 +98,7 @@ class Course {
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
       isSaved: isSaved ?? this.isSaved,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 

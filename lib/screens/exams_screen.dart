@@ -417,6 +417,55 @@ class _ExamsScreenState extends State<ExamsScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    // Exam Image
+                                    if (exam.imageUrl != null &&
+                                        exam.imageUrl!.isNotEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 12.0,
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          child: Image.network(
+                                            exam.imageUrl!,
+                                            width: double.infinity,
+                                            height: 150,
+                                            fit: BoxFit.cover,
+                                            loadingBuilder:
+                                                (
+                                                  context,
+                                                  child,
+                                                  loadingProgress,
+                                                ) {
+                                                  if (loadingProgress == null)
+                                                    return child;
+                                                  return Container(
+                                                    height: 150,
+                                                    width: double.infinity,
+                                                    color: Colors.grey[200],
+                                                    child: const Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                                  );
+                                                },
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Container(
+                                                      height: 150,
+                                                      width: double.infinity,
+                                                      color: Colors.grey[200],
+                                                      child: const Icon(
+                                                        Icons.broken_image,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                          ),
+                                        ),
+                                      ),
+
                                     Row(
                                       children: [
                                         Container(

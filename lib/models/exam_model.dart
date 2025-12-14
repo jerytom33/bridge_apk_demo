@@ -9,6 +9,7 @@ class Exam {
   final String examType; // Online, Offline
 
   final bool isSaved;
+  final String? imageUrl;
 
   Exam({
     required this.id,
@@ -20,6 +21,7 @@ class Exam {
     required this.duration,
     required this.examType,
     this.isSaved = false,
+    this.imageUrl,
   });
 
   factory Exam.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,7 @@ class Exam {
       duration: json['duration'] ?? '',
       examType: json['exam_type'] ?? '',
       isSaved: json['is_saved'] ?? false,
+      imageUrl: json['image'] as String? ?? json['image_url'] as String?,
     );
   }
 
@@ -60,6 +63,7 @@ class Exam {
     String? duration,
     String? examType,
     bool? isSaved,
+    String? imageUrl,
   }) {
     return Exam(
       id: id ?? this.id,
@@ -71,6 +75,7 @@ class Exam {
       duration: duration ?? this.duration,
       examType: examType ?? this.examType,
       isSaved: isSaved ?? this.isSaved,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 }
