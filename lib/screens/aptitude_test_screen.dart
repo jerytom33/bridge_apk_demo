@@ -33,6 +33,18 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
     _loadQuestions();
   }
 
+  /// Convert education level API value to user-friendly display name
+  String _getLevelDisplayName(String level) {
+    const levelNames = {
+      '10th': '10th Standard',
+      '12th': '12th Standard',
+      'Diploma': 'Diploma',
+      'Bachelor': "Bachelor's Degree",
+      'Master': "Master's Degree",
+    };
+    return levelNames[level] ?? level;
+  }
+
   Future<void> _loadQuestions() async {
     setState(() {
       _isLoading = true;
@@ -40,6 +52,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
     });
 
     try {
+      debugPrint('Loading questions for level: ${widget.educationLevel}');
       final questions = await _apiService.getPersonalizedQuestions(
         educationLevel: widget.educationLevel,
         questionCount: 10,
@@ -50,6 +63,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
         _isLoading = false;
       });
     } catch (e) {
+      debugPrint('Error loading questions: $e');
       setState(() {
         _isLoading = false;
         _errorMessage = e.toString().replaceAll('Exception: ', '');
@@ -174,7 +188,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Loading Aptitude Test',
+          'Loading ${_getLevelDisplayName(widget.educationLevel)} Test',
           style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
@@ -185,7 +199,7 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
             const SpinKitFadingCircle(color: Color(0xFF6C63FF), size: 60.0),
             const SizedBox(height: 24),
             Text(
-              'Generating personalized questions...',
+              'Generating ${_getLevelDisplayName(widget.educationLevel)} questions...',
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[700]),
             ),
             const SizedBox(height: 8),
@@ -312,8 +326,8 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.educationLevel} Aptitude Test',
-          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
+          '${_getLevelDisplayName(widget.educationLevel)} - Aptitude Test',
+          style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         actions: [
           Padding(

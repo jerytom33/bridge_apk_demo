@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 /// Service for AI-powered personalized aptitude tests using Google Gemini
 class AptitudeAiService {
@@ -21,10 +22,22 @@ class AptitudeAiService {
     int questionCount = 10,
   }) async {
     try {
+      // Validate education level
+      const validLevels = ['10th', '12th', 'Diploma', 'Bachelor', 'Master'];
+      if (!validLevels.contains(educationLevel)) {
+        throw Exception(
+          'Invalid education level: $educationLevel. Valid levels are: ${validLevels.join(", ")}',
+        );
+      }
+
       final token = await _getToken();
       if (token == null) {
         throw Exception('Not authenticated. Please login first.');
       }
+
+      debugPrint(
+        'API Request: GET personalized-questions level=$educationLevel count=$questionCount',
+      );
 
       final response = await http
           .get(
@@ -52,10 +65,16 @@ class AptitudeAiService {
         final responseData = jsonData['data'];
         if (responseData != null && responseData['questions'] != null) {
           final List<dynamic> questionsData = responseData['questions'];
+          debugPrint(
+            'Successfully loaded ${questionsData.length} questions for $educationLevel level',
+          );
           return questionsData.cast<Map<String, dynamic>>();
         }
         // Fallback for direct questions array
         final List<dynamic> questionsData = jsonData['data'] ?? jsonData;
+        debugPrint(
+          'Successfully loaded ${questionsData.length} questions for $educationLevel level',
+        );
         return questionsData.cast<Map<String, dynamic>>();
       } else if (response.statusCode == 401) {
         throw Exception('Authentication failed. Please login again.');
@@ -63,10 +82,12 @@ class AptitudeAiService {
         final errorData = json.decode(response.body);
         throw Exception(
           errorData['error'] ??
-              'Failed to generate questions. Please try again.',
+              'Failed to generate questions for $educationLevel level. Please try again.',
         );
       } else {
-        throw Exception('Failed to fetch questions: ${response.statusCode}');
+        throw Exception(
+          'Failed to fetch questions for $educationLevel level: ${response.statusCode}',
+        );
       }
     } on TimeoutException catch (e) {
       throw Exception(e.message ?? 'Request timeout. Please try again.');

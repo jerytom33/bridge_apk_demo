@@ -62,33 +62,33 @@ class EducationLevelSelectionScreen extends StatelessWidget {
             // Diploma Option
             _buildEducationCard(
               context,
-              title: 'Diploma',
-              subtitle: 'Polytechnic / Vocational Training Completed',
+              title: 'Diploma / Polytechnic',
+              subtitle: 'Diploma / Vocational Training Completed',
               icon: Icons.workspace_premium,
               color: const Color(0xFFFF6B6B),
               level: 'Diploma',
             ),
             const SizedBox(height: 16),
 
-            // Degree Option
+            // Bachelor's Degree Option
             _buildEducationCard(
               context,
-              title: 'Degree',
-              subtitle: 'Bachelor\'s / Undergraduate Completed',
+              title: "Bachelor's",
+              subtitle: 'Undergraduate Degree Completed',
               icon: Icons.school_rounded,
               color: const Color(0xFFFFA726),
-              level: 'Degree',
+              level: 'Bachelor',
             ),
             const SizedBox(height: 16),
 
-            // Masters Option
+            // Master's Degree Option
             _buildEducationCard(
               context,
-              title: 'Masters',
-              subtitle: 'Post-Graduate / Master\'s Completed',
+              title: "Master's",
+              subtitle: 'Post-Graduate Degree Completed',
               icon: Icons.military_tech,
               color: const Color(0xFF9C27B0),
-              level: 'Masters',
+              level: 'Master',
             ),
           ],
         ),
