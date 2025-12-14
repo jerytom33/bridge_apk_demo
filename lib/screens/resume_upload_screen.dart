@@ -6,6 +6,7 @@ import 'dart:io';
 import 'dart:async';
 import '../services/resume_api_service.dart';
 import 'resume_result_screen.dart';
+import 'login_screen.dart';
 
 class ResumeUploadScreen extends StatefulWidget {
   const ResumeUploadScreen({super.key});
@@ -95,11 +96,31 @@ class _ResumeUploadScreenState extends State<ResumeUploadScreen> {
       }
     } catch (e) {
       if (mounted) {
+        final errorMessage = e.toString().replaceAll('Exception: ', '');
+        final isAuthError =
+            errorMessage.contains('Authentication failed') ||
+            errorMessage.contains('Not authenticated');
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString().replaceAll('Exception: ', '')),
+            content: Text(errorMessage),
             backgroundColor: Colors.red,
-            duration: const Duration(seconds: 4),
+            duration: Duration(seconds: isAuthError ? 10 : 4),
+            action: isAuthError
+                ? SnackBarAction(
+                    label: 'LOGIN AGAIN',
+                    textColor: Colors.white,
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                  )
+                : null,
           ),
         );
       }

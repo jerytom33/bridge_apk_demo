@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/aptitude_ai_service.dart';
 import 'aptitude_result_screen.dart';
+import 'login_screen.dart';
 
 class AptitudeTestScreen extends StatefulWidget {
   final String educationLevel;
@@ -238,6 +239,31 @@ class _AptitudeTestScreenState extends State<AptitudeTestScreen> {
                   ),
                 ),
               ),
+              if (_errorMessage != null &&
+                  (_errorMessage!.contains('Authentication failed') ||
+                      _errorMessage!.contains('Not authenticated'))) ...[
+                const SizedBox(height: 16),
+                TextButton.icon(
+                  onPressed: () {
+                    // Navigate to Login Screen and clear stack
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  icon: const Icon(Icons.login),
+                  label: Text(
+                    'Login Again',
+                    style: GoogleFonts.poppins(fontSize: 16),
+                  ),
+                  style: TextButton.styleFrom(
+                    foregroundColor: const Color(0xFF6C63FF),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
